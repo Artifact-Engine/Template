@@ -3,3 +3,4 @@ plugins {
 }
 rootProject.name = "ArtifactTestProject"
 
+includeFlat("Artifact")

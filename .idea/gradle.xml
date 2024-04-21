@@ -7,6 +7,7 @@
         <option name="gradleHome" value="" />
         <option name="modules">
           <set>
+            <option value="$PROJECT_DIR$/../Artifact" />
             <option value="$PROJECT_DIR$" />
           </set>
         </option>

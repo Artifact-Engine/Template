@@ -1,6 +1,5 @@
 {
   "name": "TestProject",
-  "mainClass": "Boot",
   "currentScene": "TestScene",
   "rendererType": "OpenGL"
 }
