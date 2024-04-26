@@ -1,0 +1,10 @@
+[
+  {
+    "type": "CubeNode",
+    "components": [
+      {
+        "type": "TestComponentScript"
+      }
+    ]
+  }
+]

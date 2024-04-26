@@ -1,18 +1,18 @@
-import org.openartifact.artifact.core.Engine
-import org.openartifact.artifact.game.components.TransformComponent
+import org.openartifact.artifact.core.ApplicationProfile
+import org.openartifact.artifact.core.GameContext
 
-fun main(args : Array<String>) {
-    Engine
+fun main() {
 
-    Engine.application.scenes.forEach { (_, scene) ->
-        scene.nodes.forEach { node ->
-            println(node)
-            node.components.forEach { component ->
-                component as TransformComponent
-                println(component.scale)
-            }
-        }
+    GameContext.createContext {
+        configureApplicationProfile(
+            ApplicationProfile(
+                "ArtifactTestProject",
+                "Example",
+                "TestScene"
+            )
+        )
     }
 
-    println(Engine.application.getCurrentScene())
+    val gameContext = GameContext.getCurrentContext()
+
 }
