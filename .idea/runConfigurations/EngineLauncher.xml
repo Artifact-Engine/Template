@@ -3,8 +3,8 @@
     <option name="MAIN_CLASS_NAME" value="EngineLaunchKt" />
     <module name="ArtifactTestProject.main" />
     <shortenClasspath name="NONE" />
-    <option name="VM_PARAMETERS" value="-Dorg.slf4j.simpleLogger.defaultLogLevel=debug " />
     <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="copyResourcesToProjectGameData" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
       <option name="Make" enabled="true" />
     </method>
   </configuration>
