@@ -11,8 +11,11 @@ fun main() {
                 "TestScene"
             )
         )
-    }
+    }.setCurrent().launch()
 
-    val gameContext = GameContext.getCurrentContext()
+    println(
+        GameContext.current().application()
+            .profile.displayTitle
+    )
 
 }
