@@ -1,10 +1,7 @@
 [
   {
     "type": "CubeNode",
-    "components": [
-      {
-        "type": "TestComponentScript"
-      }
-    ]
+    "children": [],
+    "components": []
   }
 ]
