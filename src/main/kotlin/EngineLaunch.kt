@@ -1,9 +1,10 @@
 import org.openartifact.artifact.core.ApplicationProfile
 import org.openartifact.artifact.core.GameContext
+import org.openartifact.artifact.utils.getDefaultProjectDir
 
 fun main() {
 
-    GameContext.createContext {
+    val context = GameContext.createContext {
         configureApplicationProfile(
             ApplicationProfile(
                 "ArtifactTestProject",
@@ -11,7 +12,13 @@ fun main() {
                 "TestScene"
             )
         )
-    }.setCurrent().launch()
+    }.setCurrent()
+        .launch()
+
+    println(GameContext.current())
+    println(context)
+
+    println(getDefaultProjectDir())
 
     println(
         GameContext.current().application()
