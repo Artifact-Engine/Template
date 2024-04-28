@@ -1,5 +1,34 @@
 [
   {
+    "position": {
+      "ofs": 0,
+      "array": [
+        4.0,
+        4.0,
+        4.0
+      ]
+    },
+    "target": {
+      "ofs": 0,
+      "array": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "up": {
+      "ofs": 0,
+      "array": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    "type": "CameraNode",
+    "children": [],
+    "components": []
+  },
+  {
     "type": "CubeNode",
     "children": [],
     "components": []

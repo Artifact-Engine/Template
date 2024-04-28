@@ -1,7 +1,3 @@
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
-
 plugins {
     kotlin("jvm") version "1.9.23"
 }
@@ -44,7 +40,7 @@ tasks.jar {
 }
 
 tasks.register<Delete>("cleanTargetDir") {
-    delete("${System.getProperty("user.home")}/.artifactengine/projects/ArtifactTestProject/gameData")
+    delete("${System.getProperty("user.home")}/.artifactengine/games/ArtifactTestProject/gameData")
 }
 
 tasks.register<Copy>("copyResourcesToProjectGameData") {
@@ -53,7 +49,7 @@ tasks.register<Copy>("copyResourcesToProjectGameData") {
     dependsOn("cleanTargetDir")
 
     from("src/main/resources")
-    into("${System.getProperty("user.home")}/.artifactengine/projects/ArtifactTestProject/gameData")
+    into("${System.getProperty("user.home")}/.artifactengine/games/ArtifactTestProject/gameData")
 }
 
 tasks.named("build").configure {
