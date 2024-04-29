@@ -12,10 +12,6 @@ repositories {
 dependencies {
     implementation("io.github.kotlin-graphics:glm:0.9.9.1-12")
 
-    implementation(platform("org.lwjgl:lwjgl-bom:3.3.3"))
-    implementation("org.lwjgl", "lwjgl-glfw")
-
-
     implementation(project(":Artifact"))
 
     testImplementation(kotlin("test"))
