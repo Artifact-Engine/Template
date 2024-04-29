@@ -13,12 +13,11 @@ import org.openartifact.artifact.game.scene.Scene
 import org.openartifact.artifact.game.scene.SceneProfile
 import org.openartifact.artifact.game.scene.writeNodes
 
-
 fun main() {
 
     constructTestScene()
 
-    val context = GameContext.createContext {
+    GameContext.createContext {
         configureApplicationProfile(
             ApplicationProfile(
                 "ArtifactTestProject",
@@ -41,7 +40,7 @@ fun main() {
         .run()
 }
 
-
+@Suppress("unused")
 val keyInputHandler = handler<KeyPressEvent>({ event ->
     if (event.key == GLFW_KEY_ESCAPE) {
         glfwSetWindowShouldClose(GameContext.current().windowProfile().windowId, true)
