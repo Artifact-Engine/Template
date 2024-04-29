@@ -5,7 +5,7 @@ import org.openartifact.artifact.game.Component
 class ExampleScript : Component() {
 
     override fun awake() {
-        println("awaken")
+
     }
 
     override fun update() {
@@ -13,7 +13,7 @@ class ExampleScript : Component() {
     }
 
     override fun rest() {
-        println("resting")
+
     }
 
 }
