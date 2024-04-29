@@ -7,6 +7,7 @@ import org.openartifact.artifact.core.event.events.KeyPressEvent
 import org.openartifact.artifact.core.event.handler
 import org.openartifact.artifact.core.graphics.window.WindowProfile
 import org.lwjgl.glfw.GLFW.*
+import org.openartifact.artifact.core.graphics.window.AspectRatio
 import org.openartifact.artifact.game.nodes.CameraNode
 import org.openartifact.artifact.game.nodes.CubeNode
 import org.openartifact.artifact.game.scene.Scene
@@ -31,8 +32,9 @@ fun main() {
                 "TestGame",
                 60,
                 60,
-                800,
-                600
+                854,
+                480,
+                AspectRatio.RATIO_16_9
             )
         )
     }.setCurrent()
