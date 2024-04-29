@@ -39,23 +39,23 @@ fun main() {
         .registerComponent(ExampleScript::class)
         .registerComponent(AnotherExampleScript::class)
         .run()
-
-
-    val keyInputHandler = handler<KeyPressEvent>({ event ->
-        if (event.key == GLFW_KEY_ESCAPE) {
-            glfwSetWindowShouldClose(GameContext.current().windowProfile().windowId, true)
-        }
-    })
-
-
 }
+
+
+val keyInputHandler = handler<KeyPressEvent>({ event ->
+    if (event.key == GLFW_KEY_ESCAPE) {
+        glfwSetWindowShouldClose(GameContext.current().windowProfile().windowId, true)
+    }
+})
 
 private fun constructTestScene() : Scene {
     val scene = Scene(SceneProfile("TestScene"))
 
-    val camera = CameraNode(Vec3(4, 3, 3), Vec3(0, 0,0), Vec3(0, 1, 0))
+    val camera = CameraNode(60.0f, Vec3(4, 3, 3), Vec3(0, 0,0), Vec3(0, 1, 0))
+    val cube = CubeNode()
 
     scene.nodes.add(camera)
+    scene.nodes.add(cube)
 
     println(writeNodes(scene))
 
