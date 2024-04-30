@@ -8,7 +8,7 @@ class AnotherExampleScript : Component() {
         
     }
 
-    override fun update() {
+    override fun update(deltaTime : Double) {
 
     }
 
