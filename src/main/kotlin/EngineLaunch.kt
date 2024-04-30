@@ -3,7 +3,6 @@ import components.AnotherExampleScript
 import glm_.vec3.Vec3
 import org.openartifact.artifact.core.ApplicationProfile
 import org.openartifact.artifact.core.Context
-import org.openartifact.artifact.core.event.events.KeyPressEvent
 import org.openartifact.artifact.core.event.handler
 import org.openartifact.artifact.core.graphics.window.WindowProfile
 import org.openartifact.artifact.core.KEY_ESCAPE
@@ -31,7 +30,7 @@ fun main() {
             WindowProfile(
                 "TestGame",
                 60,
-                60,
+                100,
                 854,
                 480,
                 AspectRatio.RATIO_16_9
@@ -43,14 +42,9 @@ fun main() {
         .registerComponent(AnotherExampleScript::class)
         .run()
 
-}
+    println(Context.current().sceneManager.activeScene?.nodes)
 
-val keyInputHandler = handler<KeyPressEvent>({ event ->
-    if (event.key == KEY_ESCAPE) {
-        Context.current()
-            .requestShutdown()
-    }
-})
+}
 
 private fun constructTestScene() : Scene {
     val scene = Scene(SceneProfile("TestScene"))
