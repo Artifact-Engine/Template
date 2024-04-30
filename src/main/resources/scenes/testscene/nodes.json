@@ -32,6 +32,10 @@
   {
     "type": "CubeNode",
     "children": [],
-    "components": []
+    "components": [
+      {
+        "type": "ExampleScript"
+      }
+    ]
   }
 ]

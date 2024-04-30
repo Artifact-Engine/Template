@@ -8,8 +8,12 @@ class ExampleScript : Component() {
 
     }
 
-    override fun update(deltaTime : Double) {
+    override fun render(deltaTime : Double) {
+        println("RENDER $deltaTime")
+    }
 
+    override fun update(physicsDeltaTime: Double) {
+        println("UPDATE $physicsDeltaTime")
     }
 
     override fun rest() {
