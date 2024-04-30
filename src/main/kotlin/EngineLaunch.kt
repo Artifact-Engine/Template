@@ -2,9 +2,8 @@ import components.ExampleScript
 import components.AnotherExampleScript
 import glm_.vec3.Vec3
 import org.openartifact.artifact.core.ApplicationProfile
-import org.openartifact.artifact.core.Context
+import org.openartifact.artifact.core.GameContext
 import org.openartifact.artifact.core.graphics.window.WindowProfile
-import org.openartifact.artifact.core.graphics.window.AspectRatio
 import org.openartifact.artifact.game.nodes.CameraNode
 import org.openartifact.artifact.game.nodes.CubeNode
 import org.openartifact.artifact.game.scene.Scene
@@ -16,7 +15,7 @@ fun main() {
 
     constructTestScene()
 
-    Context.createContext {
+    GameContext.createContext {
         configureApplicationProfile(
             ApplicationProfile(
                 "ArtifactTestProject",
@@ -39,7 +38,7 @@ fun main() {
         .registerComponent(AnotherExampleScript::class)
         .run()
 
-    println(Context.current().sceneManager.activeScene?.nodes)
+    println(GameContext.current().sceneManager.activeScene?.nodes)
 
 }
 
