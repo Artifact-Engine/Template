@@ -1,27 +1,19 @@
 [
   {
-    "fov": 90,
+    "fov": 60.0,
     "position": {
       "ofs": 0,
       "array": [
         3.0,
-        0.0,
+        3.0,
         3.0
       ]
     },
-    "target": {
+    "rotation": {
       "ofs": 0,
       "array": [
         0.0,
         0.0,
-        0.0
-      ]
-    },
-    "up": {
-      "ofs": 0,
-      "array": [
-        0.0,
-        1.0,
         0.0
       ]
     },
@@ -30,6 +22,30 @@
     "components": []
   },
   {
+    "position": {
+      "ofs": 0,
+      "array": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "rotation": {
+      "ofs": 0,
+      "array": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "scale": {
+      "ofs": 0,
+      "array": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
     "type": "CubeNode",
     "children": [],
     "components": []
