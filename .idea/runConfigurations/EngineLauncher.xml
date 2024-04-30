@@ -4,7 +4,8 @@
     <module name="ArtifactTestProject.main" />
     <shortenClasspath name="NONE" />
     <method v="2">
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="copyResourcesToProjectGameData" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="false" tasks="copyResourcesToEngineData" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="false" tasks="copyResourcesToProjectGameData" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
       <option name="Make" enabled="true" />
     </method>
   </configuration>
