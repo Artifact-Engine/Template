@@ -30,8 +30,7 @@ fun main() {
                 0,
                 0,
                 854,
-                480,
-                AspectRatio.RATIO_4_3
+                480
             )
         )
     }
