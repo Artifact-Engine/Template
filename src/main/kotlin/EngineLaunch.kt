@@ -5,11 +5,11 @@ import org.openartifact.artifact.core.ApplicationProfile
 import org.openartifact.artifact.core.GameContext
 import org.openartifact.artifact.core.graphics.window.WindowProfile
 import org.openartifact.artifact.game.nodes.CameraNode
-import org.openartifact.artifact.game.nodes.CubeNode
 import org.openartifact.artifact.game.scene.Scene
 import org.openartifact.artifact.game.scene.SceneProfile
 import org.openartifact.artifact.game.scene.writeNodes
 import org.openartifact.debug.components.CameraController
+import org.openartifact.debug.nodes.CubeNode
 
 
 fun main() {
@@ -38,6 +38,7 @@ fun main() {
         .registerComponent(CameraController::class)
         .registerComponent(ExampleScript::class)
         .registerComponent(AnotherExampleScript::class)
+        .registerNode(CubeNode::class)
         .run()
 
     println(GameContext.current().sceneManager.activeScene?.nodes)
