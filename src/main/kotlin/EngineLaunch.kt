@@ -9,6 +9,7 @@ import org.openartifact.artifact.game.nodes.CubeNode
 import org.openartifact.artifact.game.scene.Scene
 import org.openartifact.artifact.game.scene.SceneProfile
 import org.openartifact.artifact.game.scene.writeNodes
+import org.openartifact.debug.components.CameraController
 
 
 fun main() {
@@ -34,6 +35,7 @@ fun main() {
         )
     }
         .set()
+        .registerComponent(CameraController::class)
         .registerComponent(ExampleScript::class)
         .registerComponent(AnotherExampleScript::class)
         .run()

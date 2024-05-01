@@ -13,6 +13,7 @@ dependencies {
     implementation("io.github.kotlin-graphics:glm:0.9.9.1-12")
 
     implementation(project(":Artifact"))
+    implementation(project(":ArtifactDebug"))
 
     testImplementation(kotlin("test"))
 }

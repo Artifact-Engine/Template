@@ -32,5 +32,8 @@ If using the debug level, add the following to the VM options:
 -Dorg.slf4j.simpleLogger.defaultLogLevel=debug 
 ```
 
+## Note
+You may want to use [ArtifactDebug](https://www.github.com/meo209/ArtifactDebug) for easier development.
+
 # License
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
