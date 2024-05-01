@@ -30,7 +30,7 @@ Running the project requires creating a run configuration like this:
 
 ![runConfiguration in intellij](docs/runConfig.png "Run Configuration in IntelliJ idea")
 
-Make sure to add the "copyResourcesToGameData" gradle task **before** the build task.
+Make sure to add the "copyResourcesToProjectGameData" and "copyResourcesToEngineData" gradle task **before** the build task.
 
 If using the debug level, add the following to the VM options:
 ```
