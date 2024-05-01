@@ -29,7 +29,7 @@
     "ofs": 0,
     "array": [1.0, 1.0, 1.0]
   },
-  "type": "CubeNode",
+  "type": "BunnyNode",
   "children": [],
   "components": []
 }
