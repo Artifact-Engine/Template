@@ -16,9 +16,14 @@ IdeaProjects
   - gradle
 ```
 
-The [settings.gradle.kts](settings.gradle.kts) must contain:
+The [settings.gradle.kts]() must contain:
 ```kotlin
 includeFlat("Artifact")
+```
+
+The [build.gradle.kts]() has to include:
+```kotlin
+implementation(project(":ArtifactDebug"))
 ```
 
 Running the project requires creating a run configuration like this:
@@ -34,6 +39,17 @@ If using the debug level, add the following to the VM options:
 
 ## Note
 You may want to use [ArtifactDebug](https://www.github.com/meo209/ArtifactDebug) for easier development.
+
+### Using ArtifactDebug
+To use ArtifactDebug you need to download it and place the folder in the same parent directory as your project.
+Then add this line to your [settings.gradle.kts]():
+```kotlin
+includeFlat("Artifact")
+```
+Then, add the following to your [build.gradle.kts]():
+```kotlin
+implementation(project(":ArtifactDebug"))
+```
 
 # License
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
