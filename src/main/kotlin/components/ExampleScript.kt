@@ -8,11 +8,8 @@ class ExampleScript : Component() {
 
     }
 
-    var i1 = 0
-    var i2 = 0
-
     override fun render(deltaTime : Double) {
-        i2++
+
     }
 
     override fun update(physicsDeltaTime: Double) {

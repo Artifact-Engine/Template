@@ -9,7 +9,7 @@ import org.openartifact.artifact.game.scene.Scene
 import org.openartifact.artifact.game.scene.SceneProfile
 import org.openartifact.artifact.game.scene.writeNodes
 import org.openartifact.debug.components.CameraController
-import org.openartifact.debug.nodes.CowNode
+import org.openartifact.debug.nodes.TestMeshNode
 
 
 fun main() {
@@ -38,7 +38,7 @@ fun main() {
         .registerComponent(CameraController::class)
         .registerComponent(ExampleScript::class)
         .registerComponent(AnotherExampleScript::class)
-        .registerNode(CowNode::class)
+        .registerNode(TestMeshNode::class)
         .run()
 
     println(GameContext.current().sceneManager.activeScene?.nodes)
@@ -49,7 +49,7 @@ private fun constructTestScene() : Scene {
     val scene = Scene(SceneProfile("TestScene"))
 
     val camera = CameraNode(90.0f, Vec3(3, 3, 3), Vec3(0, 0,0))
-    val cube = CowNode(Vec3(0, 0, 0), Vec3(0, 0, 0), Vec3(1, 1, 1))
+    val cube = TestMeshNode(Vec3(0, 0, 0), Vec3(0, 0, 0), Vec3(1, 1, 1))
 
     scene.nodes.add(camera)
     scene.nodes.add(cube)
