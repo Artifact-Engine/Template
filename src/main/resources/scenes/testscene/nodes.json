@@ -1,170 +1,32 @@
 [
   {
-    "fov": 60.0,
+    "fieldOfView": 60.0,
     "position": {
       "ofs": 0,
-      "array": [
-        0.0,
-        0.0,
-        3.0
-      ]
+      "array": [3.0, 3.0, 3.0]
     },
     "rotation": {
       "ofs": 0,
-      "array": [
-        0.0,
-        0.0,
-        0.0
-      ]
+      "array": [0.0, 0.0, 0.0]
     },
     "type": "CameraNode",
     "children": [],
     "components": []
+  }, {
+  "position": {
+    "ofs": 0,
+    "array": [0.0, 0.0, 0.0]
   },
-  {
-    "position": {
-      "ofs": 0,
-      "array": [
-        0.0,
-        0.0,
-        0.0
-      ]
-    },
-    "rotation": {
-      "ofs": 0,
-      "array": [
-        0.0,
-        0.0,
-        0.0
-      ]
-    },
-    "scale": {
-      "ofs": 0,
-      "array": [
-        1.0,
-        1.0,
-        1.0
-      ]
-    },
-    "type": "CubeNode",
-    "children": [],
-    "components": []
+  "rotation": {
+    "ofs": 0,
+    "array": [0.0, 0.0, 0.0]
   },
-  {
-    "position": {
-      "ofs": 0,
-      "array": [
-        2.0,
-        0.0,
-        0.0
-      ]
-    },
-    "rotation": {
-      "ofs": 0,
-      "array": [
-        0.0,
-        0.0,
-        0.0
-      ]
-    },
-    "scale": {
-      "ofs": 0,
-      "array": [
-        1.0,
-        1.0,
-        1.0
-      ]
-    },
-    "type": "CubeNode",
-    "children": [],
-    "components": []
+  "scale": {
+    "ofs": 0,
+    "array": [1.0, 1.0, 1.0]
   },
-  {
-    "position": {
-      "ofs": 0,
-      "array": [
-        -2.0,
-        0.0,
-        0.0
-      ]
-    },
-    "rotation": {
-      "ofs": 0,
-      "array": [
-        0.0,
-        0.0,
-        0.0
-      ]
-    },
-    "scale": {
-      "ofs": 0,
-      "array": [
-        1.0,
-        1.0,
-        1.0
-      ]
-    },
-    "type": "CubeNode",
-    "children": [],
-    "components": []
-  },
-  {
-    "position": {
-      "ofs": 0,
-      "array": [
-        0.0,
-        2.0,
-        0.0
-      ]
-    },
-    "rotation": {
-      "ofs": 0,
-      "array": [
-        0.0,
-        0.0,
-        0.0
-      ]
-    },
-    "scale": {
-      "ofs": 0,
-      "array": [
-        1.0,
-        1.0,
-        1.0
-      ]
-    },
-    "type": "CubeNode",
-    "children": [],
-    "components": []
-  }
-,
-  {
-    "position": {
-      "ofs": 0,
-      "array": [
-        0.0,
-        4.0,
-        0.0
-      ]
-    },
-    "rotation": {
-      "ofs": 0,
-      "array": [
-        0.0,
-        0.0,
-        0.0
-      ]
-    },
-    "scale": {
-      "ofs": 0,
-      "array": [
-        1.0,
-        1.0,
-        1.0
-      ]
-    },
-    "type": "CubeNode",
-    "children": [],
-    "components": []
-  }
+  "type": "CubeNode",
+  "children": [],
+  "components": []
+}
 ]
