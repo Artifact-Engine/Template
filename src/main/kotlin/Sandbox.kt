@@ -3,6 +3,8 @@ import org.lwjgl.opengl.GL11.*
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.Artifact
 import org.openartifact.artifact.input.*
+import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
+import org.openartifact.artifact.input.KeyConstants.KEY_Q
 
 class Sandbox : Application() {
 
