@@ -1,15 +1,21 @@
 import org.lwjgl.glfw.GLFW
+import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL46.*
 import org.openartifact.artifact.Entry
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.Artifact
-import org.openartifact.artifact.graphics.platform.opengl.Shader
+import org.openartifact.artifact.graphics.choose
+import org.openartifact.artifact.graphics.interfaces.IVertexBuffer
+import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
+import org.openartifact.artifact.graphics.platform.opengl.OpenGLShader
+import org.openartifact.artifact.graphics.platform.opengl.OpenGLVertexBuffer
 import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.createKeyInputMap
 import org.openartifact.artifact.input.with
 
 @Entry
+@Suppress("unused")
 class Sandbox : Application() {
 
     private val keyInputMap = createKeyInputMap {
@@ -19,12 +25,10 @@ class Sandbox : Application() {
     override fun init() {
         logger.info("Sandbox init")
 
+        renderer = OpenGLRenderer()
+
         vertexArray = glGenVertexArrays()
-
         glBindVertexArray(vertexArray)
-
-        vertexBuffer = glGenBuffers()
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer)
 
         val vertices = floatArrayOf(
             -0.5f, -0.5f, 0.0f,
@@ -32,7 +36,7 @@ class Sandbox : Application() {
             0.0f, 0.5f, 0.0f
         )
 
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
+        vertexBuffer = renderer.choose<IVertexBuffer>().create(vertices)
 
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0)
@@ -70,7 +74,7 @@ class Sandbox : Application() {
             
         """.trimIndent()
 
-        shader = Shader(vertexSource, fragmentSource)
+        shader = OpenGLShader(vertexSource, fragmentSource)
     }
 
     override fun update() {
