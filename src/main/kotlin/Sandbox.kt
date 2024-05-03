@@ -1,14 +1,14 @@
 import org.lwjgl.glfw.GLFW
-import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL46.*
 import org.openartifact.artifact.Entry
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.Artifact
 import org.openartifact.artifact.graphics.choose
+import org.openartifact.artifact.graphics.interfaces.IIndexBuffer
 import org.openartifact.artifact.graphics.interfaces.IVertexBuffer
+import org.openartifact.artifact.graphics.interfaces.IShader
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLShader
-import org.openartifact.artifact.graphics.platform.opengl.OpenGLVertexBuffer
 import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.createKeyInputMap
@@ -18,6 +18,10 @@ import org.openartifact.artifact.input.with
 @Suppress("unused")
 class Sandbox : Application() {
 
+    /**
+     * Creates a keyInputMap.
+     * @see update for processing.
+     */
     private val keyInputMap = createKeyInputMap {
         KEY_LEFT_CONTROL with KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
     }
@@ -36,16 +40,14 @@ class Sandbox : Application() {
             0.0f, 0.5f, 0.0f
         )
 
+        val indices = intArrayOf(0, 1, 2)
+
         vertexBuffer = renderer.choose<IVertexBuffer>().create(vertices)
 
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0)
 
-        indexBuffer = glGenBuffers()
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer)
-
-        val indices = intArrayOf(0, 1, 2)
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
+        indexBuffer = renderer.choose<IIndexBuffer>().create(indices)
 
         val vertexSource = """
             #version 330 core
@@ -74,7 +76,12 @@ class Sandbox : Application() {
             
         """.trimIndent()
 
-        shader = OpenGLShader(vertexSource, fragmentSource)
+        @Deprecated("Not working yet. Only OpenGL support.")
+        shader = renderer.choose<IShader>(listOf(
+            OpenGLShader.ShaderModule(vertexSource, GL_VERTEX_SHADER),
+            OpenGLShader.ShaderModule(fragmentSource, GL_FRAGMENT_SHADER),
+        ))
+        shader!!.create()
     }
 
     override fun update() {
@@ -86,7 +93,7 @@ class Sandbox : Application() {
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
         glBindVertexArray(vertexArray)
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0)
+        glDrawElements(GL_TRIANGLES, indexBuffer.count, GL_UNSIGNED_INT, 0)
     }
 
     override fun shutdown() {
