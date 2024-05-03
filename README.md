@@ -44,7 +44,7 @@ You may want to use [ArtifactDebug](https://www.github.com/meo209/ArtifactDebug)
 To use ArtifactDebug you need to download it and place the folder in the same parent directory as your project.
 Then add this line to your [settings.gradle.kts]():
 ```kotlin
-includeFlat("Artifact")
+includeFlat("ArtifactDebug")
 ```
 Then, add the following to your [build.gradle.kts]():
 ```kotlin
