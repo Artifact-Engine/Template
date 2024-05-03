@@ -1,14 +1,12 @@
 import org.lwjgl.glfw.GLFW
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL15
-import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL46.*
 import org.openartifact.artifact.Entry
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.Artifact
-import org.openartifact.artifact.input.*
 import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
+import org.openartifact.artifact.input.createKeyInputMap
+import org.openartifact.artifact.input.with
 
 @Entry
 class Sandbox : Application() {
@@ -25,6 +23,7 @@ class Sandbox : Application() {
         logger.info("Sandbox init")
 
         vertexArray = glGenVertexArrays()
+
         glBindVertexArray(vertexArray)
 
         vertexBuffer = glGenBuffers()
@@ -32,8 +31,8 @@ class Sandbox : Application() {
 
         val vertices = floatArrayOf(
             -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.0f,  0.5f, 0.0f
+            0.5f, -0.5f, 0.0f,
+            0.0f, 0.5f, 0.0f
         )
 
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
