@@ -1,24 +1,34 @@
+import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
 import org.openartifact.artifact.core.Application
+import org.openartifact.artifact.core.Artifact
+import org.openartifact.artifact.input.*
 
 class Sandbox : Application() {
 
-    override fun init() {
+    private val keyInputMap = createKeyInputMap {
+        KEY_LEFT_CONTROL with KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
+    }
 
+    override fun init() {
+        logger.info("Sandbox init")
     }
 
     override fun update() {
+        keyInputMap.process()
+
         glBegin(GL_TRIANGLES)
+        glColor3f(1.0f, 1.0f, 1.0f)
 
         glVertex2f(- 0.5f, - 0.5f)
         glVertex2f(0.5f, - 0.5f)
         glVertex2f(0.0f, 0.5f)
 
-        glEnd();
+        glEnd()
     }
 
     override fun shutdown() {
-
+        logger.info("Sandbox shutdown")
     }
 
 }

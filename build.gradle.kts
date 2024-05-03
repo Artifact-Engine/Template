@@ -39,6 +39,9 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-glfw")
     implementation("org.lwjgl", "lwjgl-opengl")
 
+    implementation("org.slf4j:slf4j-api:2.0.13")
+    implementation("org.slf4j:slf4j-simple:2.0.13")
+
     implementation(project(":Artifact"))
     implementation(project(":ArtifactDebug"))
 
@@ -51,31 +54,4 @@ tasks.test {
 
 kotlin {
     jvmToolchain(17)
-}
-
-tasks.jar {
-    manifest.attributes["Main-Class"] = "EngineLaunchKt"
-    val dependencies = configurations
-        .runtimeClasspath
-        .get()
-        .map(::zipTree)
-    from(dependencies)
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.register<Delete>("cleanTargetDir") {
-    delete("${System.getProperty("user.home")}/.artifactengine/games/ArtifactTestProject/gameData")
-}
-
-tasks.register<Copy>("copyResourcesToProjectGameData") {
-    group = "build"
-
-    dependsOn("cleanTargetDir")
-
-    from("src/main/resources")
-    into("${System.getProperty("user.home")}/.artifactengine/games/ArtifactTestProject/gameData")
-}
-
-tasks.named("build").configure {
-    dependsOn("copyResourcesToProjectGameData")
 }
