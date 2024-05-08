@@ -1,20 +1,24 @@
+import glm_.vec3.Vec3
+import glm_.vec4.Vec4
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL46.*
-import org.openartifact.artifact.Entry
+import org.openartifact.artifact.ApplicationEntry
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.Artifact
 import org.openartifact.artifact.graphics.choose
+import org.openartifact.artifact.graphics.interfaces.IBufferLayout
 import org.openartifact.artifact.graphics.interfaces.IIndexBuffer
 import org.openartifact.artifact.graphics.interfaces.IVertexBuffer
 import org.openartifact.artifact.graphics.interfaces.IShader
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLShader
+import org.openartifact.artifact.graphics.platform.opengl.buffer.OpenGLVertexBuffer
 import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.createKeyInputMap
 import org.openartifact.artifact.input.with
 
-@Entry
+@ApplicationEntry
 @Suppress("unused")
 class Sandbox : Application() {
 
@@ -44,10 +48,13 @@ class Sandbox : Application() {
 
         vertexBuffer = renderer.choose<IVertexBuffer>().create(vertices)
 
-        glEnableVertexAttribArray(0)
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0)
-
         indexBuffer = renderer.choose<IIndexBuffer>().create(indices)
+
+        vertexBuffer.apply {
+            renderer.choose<IBufferLayout>().create(mapOf(
+                Vec3::class to "a_Position"
+            ))
+        }
 
         val vertexSource = """
             #version 330 core
@@ -73,15 +80,13 @@ class Sandbox : Application() {
             void main() {
                 color = vec4(v_Position * 0.5 + 0.5, 1.0);
             }
-            
         """.trimIndent()
 
         @Deprecated("Not working yet. Only OpenGL support.")
         shader = renderer.choose<IShader>(listOf(
             OpenGLShader.ShaderModule(vertexSource, GL_VERTEX_SHADER),
             OpenGLShader.ShaderModule(fragmentSource, GL_FRAGMENT_SHADER),
-        ))
-        shader!!.create()
+        )).create()
     }
 
     override fun update() {
