@@ -40,8 +40,8 @@ class Sandbox : Application() {
         glBindVertexArray(vertexArray)
 
         val vertices = floatArrayOf(
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
+            - 0.5f, - 0.5f, 0.0f,
+            0.5f, - 0.5f, 0.0f,
             0.0f, 0.5f, 0.0f
         )
 
@@ -52,10 +52,12 @@ class Sandbox : Application() {
         indexBuffer = renderer.choose<IIndexBuffer>().create(indices)
 
         vertexBuffer.apply {
-            renderer.choose<IBufferLayout>().create(mapOf(
-                Vec3::class to "a_Position",
-                Mat4::class to "a_Mat",
-            ))
+            renderer.choose<IBufferLayout>().create(
+                mapOf(
+                    Vec3::class to ("a_Position" to false),
+                    Mat4::class to ("a_Mat" to false),
+                )
+            )
         }
 
         val vertexSource = """
@@ -86,16 +88,18 @@ class Sandbox : Application() {
         """.trimIndent()
 
         @Deprecated("Not working yet. Only OpenGL support.")
-        shader = renderer.choose<IShader>(listOf(
-            OpenGLShader.ShaderModule(vertexSource, GL_VERTEX_SHADER),
-            OpenGLShader.ShaderModule(fragmentSource, GL_FRAGMENT_SHADER),
-        )).create()
+        shader = renderer.choose<IShader>(
+            listOf(
+                OpenGLShader.ShaderModule(vertexSource, GL_VERTEX_SHADER),
+                OpenGLShader.ShaderModule(fragmentSource, GL_FRAGMENT_SHADER),
+            )
+        ).create()
     }
 
     override fun update() {
         keyInputMap.process()
 
-        shader!!.bind()
+        shader !!.bind()
 
         glClearColor(0.1f, 0.1f, 0.1f, 1f)
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
