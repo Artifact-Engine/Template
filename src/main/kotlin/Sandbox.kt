@@ -1,3 +1,4 @@
+import glm_.mat4x4.Mat4
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
 import org.lwjgl.glfw.GLFW
@@ -52,7 +53,8 @@ class Sandbox : Application() {
 
         vertexBuffer.apply {
             renderer.choose<IBufferLayout>().create(mapOf(
-                Vec3::class to "a_Position"
+                Vec3::class to "a_Position",
+                Mat4::class to "a_Mat",
             ))
         }
 
@@ -60,6 +62,7 @@ class Sandbox : Application() {
             #version 330 core
             
             layout(location = 0) in vec3 a_Position;
+            layout(location = 1) in mat4 a_Mat;
             
             out vec3 v_Position;
             
