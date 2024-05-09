@@ -1,6 +1,4 @@
 import org.lwjgl.glfw.GLFW
-import org.lwjgl.opengl.GL20.GL_VERTEX_SHADER
-import org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER
 import org.lwjgl.opengl.GL46.*
 import org.openartifact.artifact.ApplicationEntry
 import org.openartifact.artifact.core.Application
@@ -18,59 +16,116 @@ import org.openartifact.artifact.input.with
 @Suppress("unused")
 class Sandbox : Application() {
 
-    /**
-     * Creates a keyInputMap.
-     * @see update for processing.
-     */
     private val keyInputMap = createKeyInputMap {
         KEY_LEFT_CONTROL with KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
     }
 
-    private lateinit var testArray : IVertexArray
+    lateinit var triangleShader: IShader
+    lateinit var rectShader: IShader
+
+    private lateinit var triangleVertexArray: IVertexArray
+    private lateinit var triangleVertexBuffer: IVertexBuffer
+    private lateinit var triangleIndexBuffer: IIndexBuffer
+
+    private lateinit var rectVertexArray: IVertexArray
+    private lateinit var rectVertexBuffer: IVertexBuffer
+    private lateinit var rectIndexBuffer: IIndexBuffer
 
     override fun init() {
         logger.info("Sandbox init")
 
         renderer = OpenGLRenderer()
 
-        testArray = renderer.choose<IVertexArray>().create()
+        // Triangle
+        triangleVertexArray = renderer.choose<IVertexArray>().create()
 
-        val vertices = floatArrayOf(
-            // Square vertices
-            -0.5f, -0.5f, 0.0f, // bottom-left
-            0.5f, -0.5f, 0.0f,  // bottom-right
-            0.5f, 0.5f, 0.0f,   // top-right
-            -0.5f, 0.5f, 0.0f,  // top-left
-
-            // Triangle vertices
-            -0.5f, -0.5f, 0.0f, // bottom-left
-            0.5f, -0.5f, 0.0f,  // bottom-right
-            0.0f, 0.5f, 0.0f    // top-center
+        val triangleVertices = floatArrayOf(
+            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+            0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.5f, 0.0f,   1.0f, 1.0f, 1.0f, 0.0f
         )
 
-        val indices = intArrayOf(
-            // Square indices
-            0, 1, 2, // first triangle
-            2, 3, 0, // second triangle
+        val triangleIndices = intArrayOf(0, 1, 2)
 
-            // Triangle indices
-            4, 5, 6  // single triangle
-        )
-
-        val layout = renderer.choose<IBufferLayout>().create(
+        val triangleLayout = renderer.choose<IBufferLayout>().create(
             mapOf(
                 DataType.Vec3 to "a_Position",
+                DataType.Vec4 to "a_Color"
             )
         )
 
-        val vb = renderer.choose<IVertexBuffer>().create(vertices, layout)
-        val idx = renderer.choose<IIndexBuffer>().create(indices)
+        triangleVertexBuffer = renderer.choose<IVertexBuffer>().create(triangleVertices, triangleLayout)
 
-        testArray = renderer.choose<IVertexArray>().create()
-        testArray.addVertexBuffer(vb)
-        testArray.defineIndexBuffer(idx)
+        triangleIndexBuffer = renderer.choose<IIndexBuffer>().create(triangleIndices)
 
-        val vertexSource = """
+        triangleVertexArray.addVertexBuffer(triangleVertexBuffer)
+        triangleVertexArray.defineIndexBuffer(triangleIndexBuffer)
+
+        // Rectangle
+        rectVertexArray = renderer.choose<IVertexArray>().create()
+
+        val rectVertices = floatArrayOf(
+            -0.5f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+            0.5f, 0.5f, 0.0f,
+            -0.5f, 0.5f, 0.0f
+        )
+
+        val rectIndices = intArrayOf(0, 1, 2, 2, 3, 0)
+
+        val rectLayout = renderer.choose<IBufferLayout>().create(
+            mapOf(
+                DataType.Vec3 to "a_Position"
+            )
+        )
+
+        rectVertexBuffer = renderer.choose<IVertexBuffer>().create(rectVertices, rectLayout)
+
+        rectIndexBuffer = renderer.choose<IIndexBuffer>().create(rectIndices)
+
+        rectVertexArray.addVertexBuffer(rectVertexBuffer)
+        rectVertexArray.defineIndexBuffer(rectIndexBuffer)
+
+        // Shader
+        val triangleVertexSource = """
+            #version 330 core
+            
+            layout(location = 0) in vec3 a_Position;
+            layout(location = 1) in vec4 a_Color;
+            
+            out vec3 v_Position;
+            out vec4 v_Color;
+            
+            void main() {
+                v_Position = a_Position;
+                gl_Position = vec4(a_Position, 1.0);
+                v_Color = a_Color;
+            }
+            
+        """.trimIndent()
+
+        val triangleFragmentSource = """
+            #version 330 core
+            
+            layout(location = 0) out vec4 color;
+            
+            in vec3 v_Position;
+            in vec4 v_Color;
+            
+            void main() {
+                color = v_Color;
+            }
+        """.trimIndent()
+
+        triangleShader = renderer.choose<IShader>(
+            listOf(
+                OpenGLShader.ShaderModule(triangleVertexSource, GL_VERTEX_SHADER),
+                OpenGLShader.ShaderModule(triangleFragmentSource, GL_FRAGMENT_SHADER)
+            )
+        ).create()
+
+        // Shader2
+        val rectangleVertexSource = """
             #version 330 core
             
             layout(location = 0) in vec3 a_Position;
@@ -84,7 +139,7 @@ class Sandbox : Application() {
             
         """.trimIndent()
 
-        val fragmentSource = """
+        val rectangleFragmentSource = """
             #version 330 core
             
             layout(location = 0) out vec4 color;
@@ -92,15 +147,14 @@ class Sandbox : Application() {
             in vec3 v_Position;
             
             void main() {
-                color = vec4(v_Position * 0.5 + 0.5, 1.0);
+                color = vec4(0.0, 0.0, 0.2, 1.0);
             }
         """.trimIndent()
 
-        @Deprecated("Only supports OpenGL.")
-        shader = renderer.choose<IShader>(
+        rectShader = renderer.choose<IShader>(
             listOf(
-                OpenGLShader.ShaderModule(vertexSource, GL_VERTEX_SHADER),
-                OpenGLShader.ShaderModule(fragmentSource, GL_FRAGMENT_SHADER),
+                OpenGLShader.ShaderModule(rectangleVertexSource, GL_VERTEX_SHADER),
+                OpenGLShader.ShaderModule(rectangleFragmentSource, GL_FRAGMENT_SHADER)
             )
         ).create()
     }
@@ -108,12 +162,19 @@ class Sandbox : Application() {
     override fun update() {
         keyInputMap.process()
 
-        shader!!.bind()
-
         (renderer as OpenGLRenderer).clearScreenBuffers()
 
-        testArray.bind()
-        glDrawElements(GL_TRIANGLES, testArray.indexBuffer.count, GL_UNSIGNED_INT, 0)
+        rectShader.bind()
+
+        // Draw rectangle
+        rectVertexArray.bind()
+        glDrawElements(GL_TRIANGLES, rectIndexBuffer.count, GL_UNSIGNED_INT, 0)
+
+        triangleShader.bind()
+
+        // Draw triangle
+        triangleVertexArray.bind()
+        glDrawElements(GL_TRIANGLES, triangleIndexBuffer.count, GL_UNSIGNED_INT, 0)
     }
 
     override fun shutdown() {
