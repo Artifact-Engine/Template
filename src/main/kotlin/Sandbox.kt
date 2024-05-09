@@ -1,16 +1,12 @@
-import glm_.vec2.Vec2
-import glm_.vec3.Vec3
-import glm_.vec4.Vec4
 import org.lwjgl.glfw.GLFW
+import org.lwjgl.opengl.GL20.GL_VERTEX_SHADER
+import org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER
 import org.lwjgl.opengl.GL46.*
 import org.openartifact.artifact.ApplicationEntry
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.Artifact
 import org.openartifact.artifact.graphics.choose
-import org.openartifact.artifact.graphics.interfaces.IBufferLayout
-import org.openartifact.artifact.graphics.interfaces.IIndexBuffer
-import org.openartifact.artifact.graphics.interfaces.IVertexBuffer
-import org.openartifact.artifact.graphics.interfaces.IShader
+import org.openartifact.artifact.graphics.interfaces.*
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLShader
 import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
@@ -35,31 +31,31 @@ class Sandbox : Application() {
 
         renderer = OpenGLRenderer()
 
-        vertexArray = glGenVertexArrays()
-        glBindVertexArray(vertexArray)
+        vertexArray = renderer.choose<IVertexArray>().create()
 
         val vertices = floatArrayOf(
             // Vertices-------  Color-----------------  Test------
             -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-            0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-            0.0f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+            0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
         )
 
         val indices = intArrayOf(0, 1, 2)
 
-        vertexBuffer = renderer.choose<IVertexBuffer>().create(vertices)
+        val bufferLayout = renderer.choose<IBufferLayout>().create(
+            mapOf(
+                DataType.Vec3 to "a_Position",
+                DataType.Vec4 to "a_Color",
+                DataType.Vec2 to "a_Test",
+            )
+        )
+
+        vertexBuffer = renderer.choose<IVertexBuffer>().create(vertices, bufferLayout)
 
         indexBuffer = renderer.choose<IIndexBuffer>().create(indices)
 
-        vertexBuffer.apply {
-            renderer.choose<IBufferLayout>().create(
-                mapOf(
-                    DataType.Vec3 to "a_Position",
-                    DataType.Vec4 to "a_Color",
-                    DataType.Vec2 to "a_Test",
-                )
-            )
-        }
+        vertexArray.addVertexBuffer(vertexBuffer)
+        vertexArray.defineIndexBuffer(indexBuffer)
 
         val vertexSource = """
             #version 330 core
@@ -107,7 +103,7 @@ class Sandbox : Application() {
 
         (renderer as OpenGLRenderer).clearScreenBuffers()
 
-        glBindVertexArray(vertexArray)
+        vertexArray.bind()
         glDrawElements(GL_TRIANGLES, indexBuffer.count, GL_UNSIGNED_INT, 0)
     }
 
