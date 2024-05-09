@@ -26,50 +26,60 @@ class Sandbox : Application() {
         KEY_LEFT_CONTROL with KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
     }
 
+    private lateinit var testArray : IVertexArray
+
     override fun init() {
         logger.info("Sandbox init")
 
         renderer = OpenGLRenderer()
 
-        vertexArray = renderer.choose<IVertexArray>().create()
+        testArray = renderer.choose<IVertexArray>().create()
 
         val vertices = floatArrayOf(
-            // Vertices-------  Color-----------------  Test------
-            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-            0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-            0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+            // Square vertices
+            -0.5f, -0.5f, 0.0f, // bottom-left
+            0.5f, -0.5f, 0.0f,  // bottom-right
+            0.5f, 0.5f, 0.0f,   // top-right
+            -0.5f, 0.5f, 0.0f,  // top-left
+
+            // Triangle vertices
+            -0.5f, -0.5f, 0.0f, // bottom-left
+            0.5f, -0.5f, 0.0f,  // bottom-right
+            0.0f, 0.5f, 0.0f    // top-center
         )
 
-        val indices = intArrayOf(0, 1, 2)
+        val indices = intArrayOf(
+            // Square indices
+            0, 1, 2, // first triangle
+            2, 3, 0, // second triangle
 
-        val bufferLayout = renderer.choose<IBufferLayout>().create(
+            // Triangle indices
+            4, 5, 6  // single triangle
+        )
+
+        val layout = renderer.choose<IBufferLayout>().create(
             mapOf(
                 DataType.Vec3 to "a_Position",
-                DataType.Vec4 to "a_Color",
-                DataType.Vec2 to "a_Test",
             )
         )
 
-        vertexBuffer = renderer.choose<IVertexBuffer>().create(vertices, bufferLayout)
+        val vb = renderer.choose<IVertexBuffer>().create(vertices, layout)
+        val idx = renderer.choose<IIndexBuffer>().create(indices)
 
-        indexBuffer = renderer.choose<IIndexBuffer>().create(indices)
-
-        vertexArray.addVertexBuffer(vertexBuffer)
-        vertexArray.defineIndexBuffer(indexBuffer)
+        testArray = renderer.choose<IVertexArray>().create()
+        testArray.addVertexBuffer(vb)
+        testArray.defineIndexBuffer(idx)
 
         val vertexSource = """
             #version 330 core
             
             layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec4 a_Color;
             
             out vec3 v_Position;
-            out vec4 v_Color;
             
             void main() {
                 v_Position = a_Position;
                 gl_Position = vec4(a_Position, 1.0);
-                v_Color = a_Color;
             }
             
         """.trimIndent()
@@ -80,10 +90,9 @@ class Sandbox : Application() {
             layout(location = 0) out vec4 color;
             
             in vec3 v_Position;
-            in vec4 v_Color;
             
             void main() {
-                color = v_Color;
+                color = vec4(v_Position * 0.5 + 0.5, 1.0);
             }
         """.trimIndent()
 
@@ -103,8 +112,8 @@ class Sandbox : Application() {
 
         (renderer as OpenGLRenderer).clearScreenBuffers()
 
-        vertexArray.bind()
-        glDrawElements(GL_TRIANGLES, indexBuffer.count, GL_UNSIGNED_INT, 0)
+        testArray.bind()
+        glDrawElements(GL_TRIANGLES, testArray.indexBuffer.count, GL_UNSIGNED_INT, 0)
     }
 
     override fun shutdown() {
