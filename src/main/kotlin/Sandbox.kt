@@ -12,6 +12,7 @@ import org.openartifact.artifact.graphics.interfaces.IVertexBuffer
 import org.openartifact.artifact.graphics.interfaces.IShader
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLShader
+import org.openartifact.artifact.graphics.platform.opengl.buffer.layout.DataType
 import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.createKeyInputMap
@@ -38,9 +39,9 @@ class Sandbox : Application() {
         glBindVertexArray(vertexArray)
 
         val vertices = floatArrayOf(
-            - 0.5f, - 0.5f, 0.0f,
-            0.5f, - 0.5f, 0.0f,
-            0.0f, 0.5f, 0.0f
+            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.5f, 0.0f,   1.0f, 0.0f, 1.0f, 0.0f
         )
 
         val indices = intArrayOf(0, 1, 2)
@@ -52,8 +53,8 @@ class Sandbox : Application() {
         vertexBuffer.apply {
             renderer.choose<IBufferLayout>().create(
                 mapOf(
-                    Vec3::class to ("a_Position" to false),
-                    Vec4::class to ("a_Color" to false),
+                    DataType.Vec3 to "a_Position",
+                    DataType.Vec4 to "a_Color"
                 )
             )
         }
@@ -62,12 +63,15 @@ class Sandbox : Application() {
             #version 330 core
             
             layout(location = 0) in vec3 a_Position;
+            layout(location = 1) in vec4 a_Color;
             
             out vec3 v_Position;
+            out vec4 v_Color;
             
             void main() {
                 v_Position = a_Position;
                 gl_Position = vec4(a_Position, 1.0);
+                v_Color = a_Color;
             }
             
         """.trimIndent()
@@ -78,9 +82,10 @@ class Sandbox : Application() {
             layout(location = 0) out vec4 color;
             
             in vec3 v_Position;
+            in vec4 v_Color;
             
             void main() {
-                color = vec4(v_Position - 0.5 * 0.5 + 1.0, 1.0);
+                color = v_Color;
             }
         """.trimIndent()
 
@@ -96,7 +101,7 @@ class Sandbox : Application() {
     override fun update() {
         keyInputMap.process()
 
-        shader !!.bind()
+        shader!!.bind()
 
         (renderer as OpenGLRenderer).clearScreenBuffers()
 
