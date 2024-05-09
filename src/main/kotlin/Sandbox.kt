@@ -1,3 +1,4 @@
+import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
 import org.lwjgl.glfw.GLFW
@@ -12,7 +13,6 @@ import org.openartifact.artifact.graphics.interfaces.IVertexBuffer
 import org.openartifact.artifact.graphics.interfaces.IShader
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLShader
-import org.openartifact.artifact.graphics.platform.opengl.buffer.layout.DataType
 import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.createKeyInputMap
@@ -39,9 +39,10 @@ class Sandbox : Application() {
         glBindVertexArray(vertexArray)
 
         val vertices = floatArrayOf(
-            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.5f, 0.0f,   1.0f, 0.0f, 1.0f, 0.0f
+            // Vertices-------  Color-----------------  Test------
+            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+            0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
         )
 
         val indices = intArrayOf(0, 1, 2)
@@ -54,7 +55,8 @@ class Sandbox : Application() {
             renderer.choose<IBufferLayout>().create(
                 mapOf(
                     DataType.Vec3 to "a_Position",
-                    DataType.Vec4 to "a_Color"
+                    DataType.Vec4 to "a_Color",
+                    DataType.Vec2 to "a_Test",
                 )
             )
         }
