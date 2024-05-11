@@ -167,13 +167,11 @@ class Sandbox : Application() {
         (renderer as OpenGLRenderer).clearScreenBuffers()
 
         renderFlow {
-            commitShader(rectShader)
+            commit(rectShader)
+            commit(rectVertexArray)
 
-            commitVertexArray(rectVertexArray)
-
-            commitShader(triangleShader)
-
-            commitVertexArray(triangleVertexArray)
+            commit(triangleShader)
+            commit(triangleVertexArray)
         }
     }
 
