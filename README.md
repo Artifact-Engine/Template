@@ -2,9 +2,7 @@
 
 An example project for the [Artifact Game Engine](https://www.github.com/Artifact-Engine/Artifact).
 
-<span style="font-size: 75%">
 Name "Sandbox" inspired by TheCherno.
-</span>
 
 ### Note
 The setup process is not finalized and will change in the future.
