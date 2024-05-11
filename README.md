@@ -1,6 +1,6 @@
 # Artifact Test Project
 
-A test project for the [Artifact Game Engine](https://www.github.com/meo209/Artifact).
+A test project for the [Artifact Game Engine](https://www.github.com/Artifact-Engine/Artifact).
 
 ### Note
 The setup process will change in the future.
@@ -73,7 +73,7 @@ To get debug logs, add the following line to your VM options:
 Building is not yet supported. You will need to rely on your IDE for the moment.
 
 ## Note
-You may want to use [ArtifactDebug](https://www.github.com/meo209/ArtifactDebug) for easier development.
+You may want to use [ArtifactDebug](https://www.github.com/Artifact-Engine/ArtifactDebug) for easier development.
 
 ### Using ArtifactDebug
 To use ArtifactDebug you need to download it and place the downloaded directory in the same parent directory as your project (e.g. IdeaProjects).
