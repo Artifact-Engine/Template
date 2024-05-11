@@ -20,16 +20,16 @@ class Sandbox : Application() {
         KEY_LEFT_CONTROL with KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
     }
 
-    lateinit var triangleShader: IShader
-    lateinit var rectShader: IShader
+    private lateinit var triangleShader : IShader
+    private lateinit var rectShader : IShader
 
-    private lateinit var triangleVertexArray: IVertexArray
-    private lateinit var triangleVertexBuffer: IVertexBuffer
-    private lateinit var triangleIndexBuffer: IIndexBuffer
+    private lateinit var triangleVertexArray : IVertexArray
+    private lateinit var triangleVertexBuffer : IVertexBuffer
+    private lateinit var triangleIndexBuffer : IIndexBuffer
 
-    private lateinit var rectVertexArray: IVertexArray
-    private lateinit var rectVertexBuffer: IVertexBuffer
-    private lateinit var rectIndexBuffer: IIndexBuffer
+    private lateinit var rectVertexArray : IVertexArray
+    private lateinit var rectVertexBuffer : IVertexBuffer
+    private lateinit var rectIndexBuffer : IIndexBuffer
 
     override fun init() {
         logger.info("Sandbox init")
@@ -41,8 +41,8 @@ class Sandbox : Application() {
 
         val triangleVertices = floatArrayOf(
             -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-            0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.5f, 0.0f,   1.0f, 1.0f, 1.0f, 0.0f
+            0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f
         )
 
         val triangleIndices = intArrayOf(0, 1, 2)
@@ -168,13 +168,13 @@ class Sandbox : Application() {
 
         // Draw rectangle
         rectVertexArray.bind()
-        glDrawElements(GL_TRIANGLES, rectIndexBuffer.count, GL_UNSIGNED_INT, 0)
+        rectVertexArray.draw()
 
         triangleShader.bind()
 
         // Draw triangle
         triangleVertexArray.bind()
-        glDrawElements(GL_TRIANGLES, triangleIndexBuffer.count, GL_UNSIGNED_INT, 0)
+        triangleVertexArray.draw()
     }
 
     override fun shutdown() {
