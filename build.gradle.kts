@@ -1,5 +1,10 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version "1.9.23"
+
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 val lwjglNatives = Pair(
@@ -53,5 +58,17 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "21"
+}
+
+tasks.withType<ShadowJar> {
+    archiveFileName.set("Sandbox.jar")
+
+    manifest {
+        attributes["Main-Class"] = "org.openartifact.artifact.EntryPointKt"
+    }
 }
