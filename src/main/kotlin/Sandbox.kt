@@ -1,9 +1,10 @@
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL46.GL_FRAGMENT_SHADER
 import org.lwjgl.opengl.GL46.GL_VERTEX_SHADER
-import org.openartifact.artifact.ApplicationEntry
+import org.openartifact.artifact.core.ApplicationEntry
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.Artifact
+import org.openartifact.artifact.graphics.RenderAPI
 import org.openartifact.artifact.graphics.choose
 import org.openartifact.artifact.graphics.flow.renderFlow
 import org.openartifact.artifact.graphics.interfaces.*
@@ -16,7 +17,7 @@ import org.openartifact.artifact.input.with
 
 @ApplicationEntry
 @Suppress("unused")
-class Sandbox : Application() {
+class Sandbox : Application(RenderAPI.OpenGL) {
 
     private val keyInputMap = createKeyInputMap {
         KEY_LEFT_CONTROL with KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
@@ -36,7 +37,7 @@ class Sandbox : Application() {
     override fun init() {
         logger.info("Sandbox init")
 
-        renderer = OpenGLRenderer()
+        renderer = createRenderer()
 
         // Triangle
         triangleVertexArray = renderer.choose<IVertexArray>().create()
