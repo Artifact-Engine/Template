@@ -174,6 +174,8 @@ class Sandbox : Application(RenderAPI.OpenGL) {
             commit(rectShader, rectVertexArray)
 
             commit(triangleShader, triangleVertexArray)
+
+            push()
         }
     }
 
