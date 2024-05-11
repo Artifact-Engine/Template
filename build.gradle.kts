@@ -21,9 +21,11 @@ val lwjglNatives = Pair(
                 "natives-linux-riscv64"
             else
                 "natives-linux"
-        arrayOf("Windows").any { name.startsWith(it) }                ->
+
+        arrayOf("Windows").any { name.startsWith(it) } ->
             "natives-windows"
-        else                                                                            ->
+
+        else ->
             throw Error("Unrecognized or unsupported platform. Please set \"lwjglNatives\" manually")
     }
 }
@@ -66,9 +68,14 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.withType<ShadowJar> {
-    archiveFileName.set("Sandbox.jar")
+    archiveFileName.set("${project.name}-$version" +
+            ".jar")
 
     manifest {
         attributes["Main-Class"] = "org.openartifact.artifact.EntryPointKt"
     }
+}
+
+tasks.create("export") {
+    dependsOn("shadowJar")
 }

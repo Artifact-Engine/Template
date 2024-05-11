@@ -1,3 +1,6 @@
+package org.openartifact.sandbox
+
+import DataType
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL46.GL_FRAGMENT_SHADER
 import org.lwjgl.opengl.GL46.GL_VERTEX_SHADER
@@ -35,7 +38,7 @@ class Sandbox : Application(RenderAPI.OpenGL) {
     private lateinit var rectIndexBuffer : IIndexBuffer
 
     override fun init() {
-        logger.info("Sandbox init")
+        logger.info("org.openartifact.sandbox.Sandbox init")
 
         renderer = createRenderer()
 
@@ -175,7 +178,7 @@ class Sandbox : Application(RenderAPI.OpenGL) {
     }
 
     override fun shutdown() {
-        logger.info("Sandbox shutdown")
+        logger.info("org.openartifact.sandbox.Sandbox shutdown")
     }
 
 }
