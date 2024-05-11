@@ -39,10 +39,10 @@ present.
 If a class is found, it is loaded and an application is created.
 The application is then passed to the engine for further processing.
 
-Here is an example GameClass:
+Here is an example Application (name e.g. Game:
 ```kotlin
 @Entry
-class GameClass : Application(RenderAPI.OpenGL) {
+class Game : Application(RenderAPI.OpenGL) {
     
     override fun init() {
         logger.info("Game init")
@@ -58,7 +58,7 @@ class GameClass : Application(RenderAPI.OpenGL) {
 }
 ```
 
-Make **sure** to inherit the ```Application``` class in your GameClass.
+Make **sure** to inherit the ```Application``` class in your Game.
 Also, the constructor for the ```Application``` class defines the renderer api to use.
 
 ### Start
