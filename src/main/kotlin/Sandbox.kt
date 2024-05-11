@@ -1,9 +1,11 @@
 import org.lwjgl.glfw.GLFW
-import org.lwjgl.opengl.GL46.*
+import org.lwjgl.opengl.GL46.GL_FRAGMENT_SHADER
+import org.lwjgl.opengl.GL46.GL_VERTEX_SHADER
 import org.openartifact.artifact.ApplicationEntry
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.Artifact
 import org.openartifact.artifact.graphics.choose
+import org.openartifact.artifact.graphics.flow.renderFlow
 import org.openartifact.artifact.graphics.interfaces.*
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLShader
@@ -164,17 +166,15 @@ class Sandbox : Application() {
 
         (renderer as OpenGLRenderer).clearScreenBuffers()
 
-        rectShader.bind()
+        renderFlow {
+            commitShader(rectShader)
 
-        // Draw rectangle
-        rectVertexArray.bind()
-        rectVertexArray.draw()
+            commitVertexArray(rectVertexArray)
 
-        triangleShader.bind()
+            commitShader(triangleShader)
 
-        // Draw triangle
-        triangleVertexArray.bind()
-        triangleVertexArray.draw()
+            commitVertexArray(triangleVertexArray)
+        }
     }
 
     override fun shutdown() {
