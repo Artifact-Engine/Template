@@ -12,6 +12,7 @@ import org.openartifact.artifact.graphics.choose
 import org.openartifact.artifact.graphics.flow.renderFlow
 import org.openartifact.artifact.graphics.interfaces.*
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
+import org.openartifact.artifact.graphics.window.WindowConfig
 import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.createKeyInputMap
@@ -19,7 +20,12 @@ import org.openartifact.artifact.input.with
 
 @ApplicationEntry
 @Suppress("unused")
-class Sandbox : Application(RenderAPI.OpenGL) {
+class Sandbox : Application(
+    RenderAPI.OpenGL,
+    WindowConfig(
+        640, 360, "Sandbox"
+    )
+) {
 
     private val keyInputMap = createKeyInputMap {
         KEY_LEFT_CONTROL with  KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
@@ -48,7 +54,9 @@ class Sandbox : Application(RenderAPI.OpenGL) {
             -0.5f, 0.5f, 0.0f
         )
 
-        val rectIndices = intArrayOf(0, 1, 2, 2, 3, 0)
+        val rectIndices = intArrayOf(
+            0, 1, 2, 2, 3, 0
+        )
 
         val rectLayout = renderer.choose<IBufferLayout>().create(
             mapOf(
@@ -72,24 +80,27 @@ class Sandbox : Application(RenderAPI.OpenGL) {
             uniform mat4 u_MVP;
             
             out vec4 v_Color;
+            out vec3 v_Position;
             
             void main() {
                 gl_Position = u_MVP * vec4(a_Position, 1.0);
                 v_Color = u_Color;
+                v_Position = a_Position;
             }
             
         """.trimIndent()
 
         val rectangleFragmentSource = """
             #version 330 core
-            
+                        
             layout(location = 0) out vec4 color;
-            
-            in vec4 v_Color;
-            
+                        
+            in vec3 v_Position;
+                        
             void main() {
-                color = v_Color;
+                color = vec4(v_Position * 0.5 + 0.5, 1.0);
             }
+
         """.trimIndent()
 
         rectShader = renderer.choose<IShader>(
@@ -98,7 +109,7 @@ class Sandbox : Application(RenderAPI.OpenGL) {
         ).create()
 
 
-        projectionMatrix = glm.perspective(glm.radians(45f), 300f / 300f, 0.1f, 100f)
+        projectionMatrix = glm.perspective(glm.radians(45f), (windowConfig.width / windowConfig.height).toFloat(), 0.1f, 100f)
     }
 
     override fun update() {
