@@ -1,6 +1,7 @@
 package org.openartifact.sandbox
 
 import DataType
+import glm_.vec4.Vec4
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL46.GL_FRAGMENT_SHADER
 import org.lwjgl.opengl.GL46.GL_VERTEX_SHADER
@@ -17,6 +18,7 @@ import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.createKeyInputMap
 import org.openartifact.artifact.input.with
+import javax.xml.crypto.Data
 
 @ApplicationEntry
 @Suppress("unused")
@@ -135,12 +137,16 @@ class Sandbox : Application(RenderAPI.OpenGL) {
             #version 330 core
             
             layout(location = 0) in vec3 a_Position;
+
+            uniform vec4 u_Color;
             
             out vec3 v_Position;
+            out vec4 v_Color;
             
             void main() {
                 v_Position = a_Position;
                 gl_Position = vec4(a_Position, 1.0);
+                v_Color = u_Color;
             }
             
         """.trimIndent()
@@ -151,9 +157,10 @@ class Sandbox : Application(RenderAPI.OpenGL) {
             layout(location = 0) out vec4 color;
             
             in vec3 v_Position;
+            in vec4 v_Color;
             
             void main() {
-                color = vec4(0.0, 0.0, 0.2, 1.0);
+                color = v_Color;
             }
         """.trimIndent()
 
@@ -174,6 +181,8 @@ class Sandbox : Application(RenderAPI.OpenGL) {
             commit(rectShader, rectVertexArray)
 
             commit(triangleShader, triangleVertexArray)
+
+            rectShader.parameterVec4("u_Color", Vec4(1f, 1f, 1f, 1f))
 
             push()
         }
