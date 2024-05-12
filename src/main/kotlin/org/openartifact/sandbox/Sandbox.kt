@@ -174,8 +174,11 @@ class Sandbox : Application(RenderAPI.OpenGL) {
         (renderer as OpenGLRenderer).clearScreenBuffers()
 
         renderFlow {
-            rectShader.parameterVec4("u_Color", Vec4(1f, 1f, 1f, 1f))
-            commit(rectShader, rectVertexArray)
+            directCommit(rectShader) {
+                parameterVec4("u_Color", Vec4(1f, 1f, 1f, 1f))
+            }
+
+            commit(rectVertexArray)
 
             commit(triangleShader, triangleVertexArray)
 
