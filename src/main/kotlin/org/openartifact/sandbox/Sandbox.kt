@@ -126,10 +126,8 @@ class Sandbox : Application(RenderAPI.OpenGL) {
         """.trimIndent()
 
         triangleShader = renderer.choose<IShader>(
-            listOf(
-                OpenGLShader.ShaderModule(triangleVertexSource, GL_VERTEX_SHADER),
-                OpenGLShader.ShaderModule(triangleFragmentSource, GL_FRAGMENT_SHADER)
-            )
+            triangleVertexSource,
+            triangleFragmentSource,
         ).create()
 
         // Shader2
@@ -165,10 +163,8 @@ class Sandbox : Application(RenderAPI.OpenGL) {
         """.trimIndent()
 
         rectShader = renderer.choose<IShader>(
-            listOf(
-                OpenGLShader.ShaderModule(rectangleVertexSource, GL_VERTEX_SHADER),
-                OpenGLShader.ShaderModule(rectangleFragmentSource, GL_FRAGMENT_SHADER)
-            )
+            rectangleVertexSource,
+            rectangleFragmentSource
         ).create()
     }
 
@@ -178,11 +174,10 @@ class Sandbox : Application(RenderAPI.OpenGL) {
         (renderer as OpenGLRenderer).clearScreenBuffers()
 
         renderFlow {
+            rectShader.parameterVec4("u_Color", Vec4(1f, 1f, 1f, 1f))
             commit(rectShader, rectVertexArray)
 
             commit(triangleShader, triangleVertexArray)
-
-            rectShader.parameterVec4("u_Color", Vec4(1f, 1f, 1f, 1f))
 
             push()
         }
