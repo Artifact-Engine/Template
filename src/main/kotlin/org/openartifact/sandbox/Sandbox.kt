@@ -13,8 +13,12 @@ import org.openartifact.artifact.graphics.cameras.PerspectiveCamera
 import org.openartifact.artifact.graphics.interfaces.*
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
 import org.openartifact.artifact.graphics.window.WindowConfig
+import org.openartifact.artifact.input.KeyConstants.KEY_A
+import org.openartifact.artifact.input.KeyConstants.KEY_D
 import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
+import org.openartifact.artifact.input.KeyConstants.KEY_S
+import org.openartifact.artifact.input.KeyConstants.KEY_W
 import org.openartifact.artifact.input.createKeyInputMap
 import org.openartifact.artifact.input.with
 import org.openartifact.artifact.resource.getResource
@@ -29,10 +33,14 @@ class Sandbox : Application(
     )
 ) {
 
-    private lateinit var camera : Camera
+    private lateinit var camera : PerspectiveCamera
 
     private val keyInputMap = createKeyInputMap {
         KEY_LEFT_CONTROL with KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
+        KEY_W to { camera.move(0f, 0f, -.1f) }
+        KEY_S to { camera.move(0f, 0f, .1f) }
+        KEY_A to { camera.move(-.1f, 0f, 0f) }
+        KEY_D to { camera.move(.1f, 0f, 0f) }
     }
 
     private lateinit var rectShader : IShader
