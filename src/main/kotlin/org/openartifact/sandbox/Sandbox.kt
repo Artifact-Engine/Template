@@ -17,6 +17,8 @@ import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.createKeyInputMap
 import org.openartifact.artifact.input.with
+import org.openartifact.artifact.resource.getResource
+import org.openartifact.artifact.resource.resource
 
 @ApplicationEntry
 @Suppress("unused")
@@ -114,45 +116,15 @@ class Sandbox : Application(
         rectVertexArray.addVertexBuffer(rectVertexBuffer)
         rectVertexArray.defineIndexBuffer(rectIndexBuffer)
 
-        val rectangleVertexSource = """
-            #version 330 core
-            
-            layout(location = 0) in vec3 a_Position;
-
-            uniform vec4 u_Color;
-            uniform mat4 u_MVP;
-            
-            out vec4 v_Color;
-            out vec3 v_Position;
-            
-            void main() {
-                gl_Position = u_MVP * vec4(a_Position, 1.0);
-                v_Color = u_Color;
-                v_Position = a_Position;
-            }
-            
-        """.trimIndent()
-
-        val rectangleFragmentSource = """
-            #version 330 core
-                        
-            layout(location = 0) out vec4 color;
-                        
-            in vec3 v_Position;
-                        
-            void main() {
-                color = vec4(v_Position * 0.5 + 0.5, 1.0);
-            }
-
-        """.trimIndent()
+        resource("vertex", "shaders/vertex.glsl").cache()
+        resource("fragment", "shaders/fragment.glsl").cache()
 
         rectShader = renderer.choose<IShader>(
-            rectangleVertexSource,
-            rectangleFragmentSource
+            getResource("vertex").asText(),
+            getResource("fragment").asText()
         ).create()
 
-
-        projectionMatrix = glm.perspective(glm.radians(45f), (windowConfig.width / windowConfig.height).toFloat(), 0.1f, 100f)
+        projectionMatrix = glm.perspective(glm.radians(90f), (windowConfig.width / windowConfig.height).toFloat(), 0.1f, 100f)
     }
 
     override fun update() {
@@ -164,7 +136,7 @@ class Sandbox : Application(
 
             val view = glm.lookAt(
                 Vec3(4, 3, 3),
-                Vec3(0, 0, 0),
+                Vec3(1, 1, 1),
                 Vec3(0, 1, 0)
             )
 
