@@ -25,7 +25,7 @@ import org.openartifact.artifact.resource.resource
 class Sandbox : Application(
     RenderAPI.OpenGL,
     WindowConfig(
-        854, 480, "Sandbox"
+        854f, 480f, "Sandbox"
     )
 ) {
 
@@ -124,7 +124,7 @@ class Sandbox : Application(
             getResource("fragment").asText()
         ).create()
 
-        projectionMatrix = glm.perspective(glm.radians(90f), (windowConfig.width / windowConfig.height).toFloat(), 0.1f, 100f)
+        projectionMatrix = glm.perspective(glm.radians(90f), windowConfig.width / windowConfig.height, 0.1f, 100f)
     }
 
     override fun update() {
@@ -136,7 +136,7 @@ class Sandbox : Application(
 
             val view = glm.lookAt(
                 Vec3(4, 3, 3),
-                Vec3(1, 1, 1),
+                Vec3(0, 0, 0),
                 Vec3(0, 1, 0)
             )
 
