@@ -5,11 +5,11 @@ import glm_.mat4x4.Mat4
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
 import org.lwjgl.glfw.GLFW
-import org.openartifact.artifact.core.*
-import org.openartifact.artifact.graphics.DataType
-import org.openartifact.artifact.graphics.RenderAPI
-import org.openartifact.artifact.graphics.choose
-import org.openartifact.artifact.graphics.flow.renderFlow
+import org.openartifact.artifact.core.Application
+import org.openartifact.artifact.core.ApplicationEntry
+import org.openartifact.artifact.core.Artifact
+import org.openartifact.artifact.graphics.*
+import org.openartifact.artifact.graphics.cameras.PerspectiveCamera
 import org.openartifact.artifact.graphics.interfaces.*
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
 import org.openartifact.artifact.graphics.window.WindowConfig
@@ -29,8 +29,10 @@ class Sandbox : Application(
     )
 ) {
 
+    private lateinit var camera : Camera
+
     private val keyInputMap = createKeyInputMap {
-        KEY_LEFT_CONTROL with  KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
+        KEY_LEFT_CONTROL with KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
     }
 
     private lateinit var rectShader : IShader
@@ -38,8 +40,6 @@ class Sandbox : Application(
     private lateinit var rectVertexArray : IVertexArray
     private lateinit var rectVertexBuffer : IVertexBuffer
     private lateinit var rectIndexBuffer : IIndexBuffer
-
-    private lateinit var projectionMatrix : Mat4
 
     override fun init() {
         logger.info("Sandbox init")
@@ -51,41 +51,41 @@ class Sandbox : Application(
 
         val vertices = floatArrayOf(
             -1.0f, -1.0f, -1.0f, // 0
-            -1.0f, -1.0f,  1.0f, // 1
-            -1.0f,  1.0f,  1.0f, // 2
-            1.0f,  1.0f, -1.0f, // 3
+            -1.0f, -1.0f, 1.0f, // 1
+            -1.0f, 1.0f, 1.0f, // 2
+            1.0f, 1.0f, -1.0f, // 3
             -1.0f, -1.0f, -1.0f, // 4
-            -1.0f,  1.0f, -1.0f, // 5
-            1.0f, -1.0f,  1.0f, // 6
+            -1.0f, 1.0f, -1.0f, // 5
+            1.0f, -1.0f, 1.0f, // 6
             -1.0f, -1.0f, -1.0f, // 7
             1.0f, -1.0f, -1.0f, // 8
-            1.0f,  1.0f, -1.0f, // 9
+            1.0f, 1.0f, -1.0f, // 9
             1.0f, -1.0f, -1.0f, // 10
             -1.0f, -1.0f, -1.0f, // 11
             -1.0f, -1.0f, -1.0f, // 12
-            -1.0f,  1.0f,  1.0f, // 13
-            -1.0f,  1.0f, -1.0f, // 14
-            1.0f, -1.0f,  1.0f, // 15
-            -1.0f, -1.0f,  1.0f, // 16
+            -1.0f, 1.0f, 1.0f, // 13
+            -1.0f, 1.0f, -1.0f, // 14
+            1.0f, -1.0f, 1.0f, // 15
+            -1.0f, -1.0f, 1.0f, // 16
             -1.0f, -1.0f, -1.0f, // 17
-            -1.0f,  1.0f,  1.0f, // 18
-            -1.0f, -1.0f,  1.0f, // 19
-            1.0f, -1.0f,  1.0f, // 20
-            1.0f,  1.0f,  1.0f, // 21
+            -1.0f, 1.0f, 1.0f, // 18
+            -1.0f, -1.0f, 1.0f, // 19
+            1.0f, -1.0f, 1.0f, // 20
+            1.0f, 1.0f, 1.0f, // 21
             1.0f, -1.0f, -1.0f, // 22
-            1.0f,  1.0f, -1.0f, // 23
+            1.0f, 1.0f, -1.0f, // 23
             1.0f, -1.0f, -1.0f, // 24
-            1.0f,  1.0f,  1.0f, // 25
-            1.0f, -1.0f,  1.0f, // 26
-            1.0f,  1.0f,  1.0f, // 27
-            1.0f,  1.0f, -1.0f, // 28
-            -1.0f,  1.0f, -1.0f, // 29
-            1.0f,  1.0f,  1.0f, // 30
-            -1.0f,  1.0f, -1.0f, // 31
-            -1.0f,  1.0f,  1.0f, // 32
-            1.0f,  1.0f,  1.0f, // 33
-            -1.0f,  1.0f,  1.0f, // 34
-            1.0f, -1.0f,  1.0f  // 35
+            1.0f, 1.0f, 1.0f, // 25
+            1.0f, -1.0f, 1.0f, // 26
+            1.0f, 1.0f, 1.0f, // 27
+            1.0f, 1.0f, -1.0f, // 28
+            -1.0f, 1.0f, -1.0f, // 29
+            1.0f, 1.0f, 1.0f, // 30
+            -1.0f, 1.0f, -1.0f, // 31
+            -1.0f, 1.0f, 1.0f, // 32
+            1.0f, 1.0f, 1.0f, // 33
+            -1.0f, 1.0f, 1.0f, // 34
+            1.0f, -1.0f, 1.0f  // 35
         )
 
         val indices = intArrayOf(
@@ -124,7 +124,7 @@ class Sandbox : Application(
             getResource("fragment").asText()
         ).create()
 
-        projectionMatrix = glm.perspective(glm.radians(90f), windowConfig.width / windowConfig.height, 0.1f, 100f)
+        camera = PerspectiveCamera(90f, Vec3(4, 4, 3), Vec3(22.5f, -45, 0))
     }
 
     override fun update() {
@@ -133,16 +133,9 @@ class Sandbox : Application(
         (renderer as OpenGLRenderer).clearScreenBuffers()
 
         renderFlow {
+            val model = Mat4().identity()
 
-            val view = glm.lookAt(
-                Vec3(4, 3, 3),
-                Vec3(0, 0, 0),
-                Vec3(0, 1, 0)
-            )
-
-            val model = Mat4(1f)
-
-            val mvp = projectionMatrix * view * model
+            val mvp = camera.calculateProjectionMatrix() * camera.calculateViewMatrix() * model
 
             directCommit(rectShader) {
                 parameterMat4("u_MVP", mvp)
