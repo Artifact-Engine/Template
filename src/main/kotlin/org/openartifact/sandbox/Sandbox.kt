@@ -11,6 +11,7 @@
 package org.openartifact.sandbox
 
 import glm_.mat4x4.Mat4
+import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
 import org.lwjgl.glfw.GLFW
@@ -30,10 +31,15 @@ import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.KeyConstants.KEY_S
 import org.openartifact.artifact.input.KeyConstants.KEY_W
+import org.openartifact.artifact.input.KeyConstants.MOUSE_BUTTON_1
+import org.openartifact.artifact.input.MouseInput
+import org.openartifact.artifact.input.MouseInput.hold
+import org.openartifact.artifact.input.MouseInput.move
 import org.openartifact.artifact.input.createKeyInputMap
 import org.openartifact.artifact.input.with
 import org.openartifact.artifact.resource.getResource
 import org.openartifact.artifact.resource.resource
+import java.util.concurrent.locks.ReentrantLock
 
 @ApplicationEntry
 @Suppress("unused")
@@ -156,6 +162,19 @@ class Sandbox : Application(
     override fun update() {
         keyInputMap.process()
         cameraInputMap.process()
+
+        MouseInput.withSensitivity(0.5f) {
+            move { pos: Vec2 ->
+                hold(MOUSE_BUTTON_1) {
+                    println(camera.rotation.x)
+                    camera.rotate(pos.y, pos.x, 0f)
+
+                    if (camera.rotation.x > 45) {
+                        camera.rotate(-1f, 0f, 0f)
+                    }
+                }
+            }
+        }
 
         camera.move(movement, 0.1f)
 
