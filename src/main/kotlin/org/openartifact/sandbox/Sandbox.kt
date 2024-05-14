@@ -17,6 +17,7 @@ import org.lwjgl.glfw.GLFW
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.ApplicationEntry
 import org.openartifact.artifact.core.Artifact
+import org.openartifact.artifact.globalext.reset
 import org.openartifact.artifact.graphics.*
 import org.openartifact.artifact.graphics.cameras.PerspectiveCamera
 import org.openartifact.artifact.graphics.interfaces.*
@@ -24,6 +25,7 @@ import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
 import org.openartifact.artifact.graphics.window.WindowConfig
 import org.openartifact.artifact.input.KeyConstants.KEY_A
 import org.openartifact.artifact.input.KeyConstants.KEY_D
+import org.openartifact.artifact.input.KeyConstants.KEY_E
 import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
 import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.KeyConstants.KEY_S
@@ -43,13 +45,20 @@ class Sandbox : Application(
 ) {
 
     private lateinit var camera : PerspectiveCamera
+    private val movement = Vec3()
+
+    private val cameraInputMap = createKeyInputMap {
+        KEY_W to { movement.z += -1f }
+        KEY_A to { movement.x += -1f }
+        KEY_S to { movement.z += 1f }
+        KEY_D to { movement.x += 1f }
+
+        KEY_E to { movement.y += 1f }
+        KEY_Q to { movement.y += -1f }
+    }
 
     private val keyInputMap = createKeyInputMap {
         KEY_LEFT_CONTROL with KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
-        KEY_W to { camera.move(0f, 0f, -.1f) }
-        KEY_S to { camera.move(0f, 0f, .1f) }
-        KEY_A to { camera.move(-.1f, 0f, 0f) }
-        KEY_D to { camera.move(.1f, 0f, 0f) }
     }
 
     private lateinit var rectShader : IShader
@@ -141,11 +150,16 @@ class Sandbox : Application(
             getResource("fragment").asText()
         ).create()
 
-        camera = PerspectiveCamera(90f, Vec3(4, 4, 3), Vec3(22.5f, -45, 0))
+        camera = PerspectiveCamera(90f, Vec3(4, 4, 4), Vec3(22.5f, -45, 0))
     }
 
     override fun update() {
         keyInputMap.process()
+        cameraInputMap.process()
+
+        camera.move(movement, 0.1f)
+
+        movement.reset()
 
         (renderer as OpenGLRenderer).clearScreenBuffers()
 
