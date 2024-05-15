@@ -32,6 +32,7 @@ import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.KeyConstants.KEY_S
 import org.openartifact.artifact.input.KeyConstants.KEY_W
 import org.openartifact.artifact.input.KeyConstants.MOUSE_BUTTON_1
+import org.openartifact.artifact.input.KeyConstants.MOUSE_BUTTON_2
 import org.openartifact.artifact.input.MouseInput
 import org.openartifact.artifact.input.MouseInput.hold
 import org.openartifact.artifact.input.MouseInput.move
@@ -39,7 +40,6 @@ import org.openartifact.artifact.input.createKeyInputMap
 import org.openartifact.artifact.input.with
 import org.openartifact.artifact.resource.getResource
 import org.openartifact.artifact.resource.resource
-import java.util.concurrent.locks.ReentrantLock
 
 @ApplicationEntry
 @Suppress("unused")
@@ -163,10 +163,10 @@ class Sandbox : Application(
         keyInputMap.process()
         cameraInputMap.process()
 
-        MouseInput.withSensitivity(0.5f) {
-            move { pos: Vec2 ->
+        MouseInput.process(0.5f) {
+            move { pos : Vec2 ->
                 hold(MOUSE_BUTTON_1) {
-                    println(camera.rotation.x)
+                    println("${camera.rotation.x} -> $pos.x")
                     camera.rotate(pos.y, pos.x, 0f)
 
                     if (camera.rotation.x > 45) {
@@ -180,21 +180,21 @@ class Sandbox : Application(
 
         movement.reset()
 
-        (renderer as OpenGLRenderer).clearScreenBuffers()
+        renderer.frame {
+            renderFlow {
+                val model = Mat4().identity()
 
-        renderFlow {
-            val model = Mat4().identity()
+                val mvp = camera.calculateProjectionMatrix() * camera.calculateViewMatrix() * model
 
-            val mvp = camera.calculateProjectionMatrix() * camera.calculateViewMatrix() * model
+                directCommit(rectShader) {
+                    parameterMat4("u_MVP", mvp)
+                    parameterVec4("u_Color", Vec4(1f, 1f, 1f, 1f))
+                }
 
-            directCommit(rectShader) {
-                parameterMat4("u_MVP", mvp)
-                parameterVec4("u_Color", Vec4(1f, 1f, 1f, 1f))
+                commit(rectVertexArray)
+
+                push()
             }
-
-            commit(rectVertexArray)
-
-            push()
         }
     }
 
