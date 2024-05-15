@@ -162,8 +162,9 @@ class Sandbox : Application(
     override fun update() {
         keyInputMap.process()
         cameraInputMap.process()
+            .run { camera.move(movement, 0.1f) }
 
-        MouseInput.process(0.5f) {
+        MouseInput.process {
             move { pos : Vec2 ->
                 hold(MOUSE_BUTTON_1) {
                     println("${camera.rotation.x} -> $pos.x")
@@ -175,8 +176,6 @@ class Sandbox : Application(
                 }
             }
         }
-
-        camera.move(movement, 0.1f)
 
         movement.reset()
 
