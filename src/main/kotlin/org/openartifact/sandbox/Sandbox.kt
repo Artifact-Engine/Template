@@ -14,15 +14,14 @@ import glm_.mat4x4.Mat4
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
-import org.lwjgl.glfw.GLFW
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.ApplicationEntry
-import org.openartifact.artifact.core.Artifact
+import org.openartifact.artifact.core.event.events.FPSUpdateEvent
+import org.openartifact.artifact.core.event.subscribe
 import org.openartifact.artifact.globalext.reset
 import org.openartifact.artifact.graphics.*
 import org.openartifact.artifact.graphics.cameras.PerspectiveCamera
 import org.openartifact.artifact.graphics.interfaces.*
-import org.openartifact.artifact.graphics.platform.opengl.OpenGLRenderer
 import org.openartifact.artifact.graphics.window.WindowConfig
 import org.openartifact.artifact.input.KeyConstants.KEY_A
 import org.openartifact.artifact.input.KeyConstants.KEY_D
@@ -32,7 +31,6 @@ import org.openartifact.artifact.input.KeyConstants.KEY_Q
 import org.openartifact.artifact.input.KeyConstants.KEY_S
 import org.openartifact.artifact.input.KeyConstants.KEY_W
 import org.openartifact.artifact.input.KeyConstants.MOUSE_BUTTON_1
-import org.openartifact.artifact.input.KeyConstants.MOUSE_BUTTON_2
 import org.openartifact.artifact.input.MouseInput
 import org.openartifact.artifact.input.MouseInput.hold
 import org.openartifact.artifact.input.MouseInput.move
@@ -64,7 +62,7 @@ class Sandbox : Application(
     }
 
     private val keyInputMap = createKeyInputMap {
-        KEY_LEFT_CONTROL with KEY_Q to { GLFW.glfwSetWindowShouldClose(Artifact.instance.window.handle, true) }
+        KEY_LEFT_CONTROL with KEY_Q to { requestShutdown() }
     }
 
     private lateinit var rectShader : IShader
@@ -157,9 +155,13 @@ class Sandbox : Application(
         ).create()
 
         camera = PerspectiveCamera(90f, Vec3(4, 4, 4), Vec3(22.5f, -45, 0))
+
+        subscribe(FPSUpdateEvent::class) {
+            println(it.fps)
+        }
     }
 
-    override fun update() {
+    override fun update(deltaTime : Double) {
         keyInputMap.process()
         cameraInputMap.process()
             .run { camera.move(movement, 0.1f) }
@@ -167,7 +169,6 @@ class Sandbox : Application(
         MouseInput.process {
             move { pos : Vec2 ->
                 hold(MOUSE_BUTTON_1) {
-                    println("${camera.rotation.x} -> $pos.x")
                     camera.rotate(pos.y, pos.x, 0f)
 
                     if (camera.rotation.x > 45) {
@@ -185,10 +186,10 @@ class Sandbox : Application(
 
                 val mvp = camera.calculateProjectionMatrix() * camera.calculateViewMatrix() * model
 
-                directCommit(rectShader) {
+                commit(rectShader) {
                     parameterMat4("u_MVP", mvp)
                     parameterVec4("u_Color", Vec4(1f, 1f, 1f, 1f))
-                }
+                }.push()
 
                 commit(rectVertexArray)
 
