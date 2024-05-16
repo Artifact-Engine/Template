@@ -18,6 +18,7 @@ import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.ApplicationEntry
 import org.openartifact.artifact.core.event.events.FPSUpdateEvent
 import org.openartifact.artifact.core.event.subscribe
+import org.openartifact.artifact.core.event.unsubscribe
 import org.openartifact.artifact.globalext.reset
 import org.openartifact.artifact.graphics.*
 import org.openartifact.artifact.graphics.cameras.PerspectiveCamera
@@ -156,9 +157,11 @@ class Sandbox : Application(
 
         camera = PerspectiveCamera(90f, Vec3(4, 4, 4), Vec3(22.5f, -45, 0))
 
-        subscribe(FPSUpdateEvent::class) {
+        val listener = subscribe(FPSUpdateEvent::class) {
             println(it.fps)
         }
+
+        unsubscribe(FPSUpdateEvent::class, listener)
     }
 
     override fun update(deltaTime : Double) {
