@@ -194,7 +194,6 @@ class Sandbox : Application(
 
                 directCommit(rectShader) {
                     parameterMat4("u_MVP", mvp)
-                    parameterVec4("u_Color", Vec4(1f, 1f, 1f, 1f))
                 }
 
                 commit(rectVertexArray)
