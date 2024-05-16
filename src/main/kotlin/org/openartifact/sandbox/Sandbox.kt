@@ -23,6 +23,8 @@ import org.openartifact.artifact.globalext.reset
 import org.openartifact.artifact.graphics.*
 import org.openartifact.artifact.graphics.cameras.PerspectiveCamera
 import org.openartifact.artifact.graphics.interfaces.*
+import org.openartifact.artifact.graphics.platform.opengl.OpenGLShader
+import org.openartifact.artifact.graphics.platform.opengl.ShaderType
 import org.openartifact.artifact.graphics.window.WindowConfig
 import org.openartifact.artifact.input.KeyConstants.KEY_A
 import org.openartifact.artifact.input.KeyConstants.KEY_D
@@ -150,18 +152,19 @@ class Sandbox : Application(
         resource("vertex", "shaders/vertex.glsl").cache()
         resource("fragment", "shaders/fragment.glsl").cache()
 
-        rectShader = renderer.choose<IShader>(
-            getResource("vertex").asText(),
-            getResource("fragment").asText()
-        ).create()
+        rectShader = renderer.choose<IShader>()
+            .create(
+                listOf(
+                    OpenGLShader.ShaderModule(getResource("vertex").asText(), ShaderType.VERTEX),
+                    OpenGLShader.ShaderModule(getResource("fragment").asText(), ShaderType.FRAGMENT),
+                )
+            )
 
         camera = PerspectiveCamera(90f, Vec3(4, 4, 4), Vec3(22.5f, -45, 0))
 
-        val listener = subscribe(FPSUpdateEvent::class) {
-            println(it.fps)
+        subscribe(FPSUpdateEvent::class) { event ->
+            logger.info("FPS: ${event.fps}")
         }
-
-        unsubscribe(FPSUpdateEvent::class, listener)
     }
 
     override fun update(deltaTime : Double) {
@@ -187,12 +190,12 @@ class Sandbox : Application(
             renderFlow {
                 val model = Mat4().identity()
 
-                val mvp = camera.calculateProjectionMatrix() * camera.calculateViewMatrix() * model
+                val mvp = camera.calculateMVPMatrix(model)
 
-                commit(rectShader) {
+                directCommit(rectShader) {
                     parameterMat4("u_MVP", mvp)
                     parameterVec4("u_Color", Vec4(1f, 1f, 1f, 1f))
-                }.push()
+                }
 
                 commit(rectVertexArray)
 
