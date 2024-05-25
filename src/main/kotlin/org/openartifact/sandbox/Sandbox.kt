@@ -151,8 +151,8 @@ class Sandbox : Application(
         rectVertexArray.addVertexBuffer(rectVertexBuffer)
         rectVertexArray.defineIndexBuffer(rectIndexBuffer)
 
-        val vertex = resource("shaders/vertex.glsl").cache()
-        val fragment = resource("shaders/fragment.glsl").cache()
+        val vertex = resource("shaders/vertex.glsl")
+        val fragment = resource("shaders/fragment.glsl")
 
         rectShader = renderer.choose<IShader>()
             .create(
@@ -165,6 +165,9 @@ class Sandbox : Application(
         camera = PerspectiveCamera(90f, Vec3(4, 4, 4), Vec3(22.5f, -45, 0))
 
         val texResource = resource("tex.png")
+        println(texResource.extract())
+
+        println(resource("tex.png").extract())
 
         println(texResource.path)
 
