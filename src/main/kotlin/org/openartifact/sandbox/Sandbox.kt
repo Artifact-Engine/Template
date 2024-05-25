@@ -24,21 +24,9 @@ import org.openartifact.artifact.graphics.interfaces.*
 import org.openartifact.artifact.graphics.platform.opengl.OpenGLShader
 import org.openartifact.artifact.graphics.platform.opengl.ShaderType
 import org.openartifact.artifact.graphics.window.WindowConfig
-import org.openartifact.artifact.input.KeyConstants.KEY_A
-import org.openartifact.artifact.input.KeyConstants.KEY_D
-import org.openartifact.artifact.input.KeyConstants.KEY_E
-import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_CONTROL
-import org.openartifact.artifact.input.KeyConstants.KEY_LEFT_SHIFT
-import org.openartifact.artifact.input.KeyConstants.KEY_Q
-import org.openartifact.artifact.input.KeyConstants.KEY_S
-import org.openartifact.artifact.input.KeyConstants.KEY_W
-import org.openartifact.artifact.input.KeyConstants.MOUSE_BUTTON_1
-import org.openartifact.artifact.input.MouseInput
+import org.openartifact.artifact.input.*
 import org.openartifact.artifact.input.MouseInput.hold
 import org.openartifact.artifact.input.MouseInput.move
-import org.openartifact.artifact.input.createKeyInputMap
-import org.openartifact.artifact.input.getKeyDown
-import org.openartifact.artifact.input.with
 import org.openartifact.artifact.resource.resource
 
 @ApplicationEntry
