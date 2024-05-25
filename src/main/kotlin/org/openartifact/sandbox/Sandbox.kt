@@ -13,13 +13,11 @@ package org.openartifact.sandbox
 import glm_.mat4x4.Mat4
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
-import glm_.vec4.Vec4
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.ApplicationEntry
 import org.openartifact.artifact.core.event.events.FPSUpdateEvent
 import org.openartifact.artifact.core.event.subscribe
-import org.openartifact.artifact.core.event.unsubscribe
-import org.openartifact.artifact.globalext.reset
+import org.openartifact.artifact.extensions.reset
 import org.openartifact.artifact.graphics.*
 import org.openartifact.artifact.graphics.cameras.PerspectiveCamera
 import org.openartifact.artifact.graphics.interfaces.*
@@ -39,7 +37,6 @@ import org.openartifact.artifact.input.MouseInput.hold
 import org.openartifact.artifact.input.MouseInput.move
 import org.openartifact.artifact.input.createKeyInputMap
 import org.openartifact.artifact.input.with
-import org.openartifact.artifact.resource.getResource
 import org.openartifact.artifact.resource.resource
 
 @ApplicationEntry
@@ -53,6 +50,8 @@ class Sandbox : Application(
 
     private lateinit var camera : PerspectiveCamera
     private val movement = Vec3()
+
+    private lateinit var texture : ITexture
 
     private val cameraInputMap = createKeyInputMap {
         KEY_W to { movement.z += -1f }
@@ -82,63 +81,66 @@ class Sandbox : Application(
         // Rectangle
         rectVertexArray = renderer.choose<IVertexArray>().create()
 
+
         val vertices = floatArrayOf(
-            -1.0f, -1.0f, -1.0f, // 0
-            -1.0f, -1.0f, 1.0f, // 1
-            -1.0f, 1.0f, 1.0f, // 2
-            1.0f, 1.0f, -1.0f, // 3
-            -1.0f, -1.0f, -1.0f, // 4
-            -1.0f, 1.0f, -1.0f, // 5
-            1.0f, -1.0f, 1.0f, // 6
-            -1.0f, -1.0f, -1.0f, // 7
-            1.0f, -1.0f, -1.0f, // 8
-            1.0f, 1.0f, -1.0f, // 9
-            1.0f, -1.0f, -1.0f, // 10
-            -1.0f, -1.0f, -1.0f, // 11
-            -1.0f, -1.0f, -1.0f, // 12
-            -1.0f, 1.0f, 1.0f, // 13
-            -1.0f, 1.0f, -1.0f, // 14
-            1.0f, -1.0f, 1.0f, // 15
-            -1.0f, -1.0f, 1.0f, // 16
-            -1.0f, -1.0f, -1.0f, // 17
-            -1.0f, 1.0f, 1.0f, // 18
-            -1.0f, -1.0f, 1.0f, // 19
-            1.0f, -1.0f, 1.0f, // 20
-            1.0f, 1.0f, 1.0f, // 21
-            1.0f, -1.0f, -1.0f, // 22
-            1.0f, 1.0f, -1.0f, // 23
-            1.0f, -1.0f, -1.0f, // 24
-            1.0f, 1.0f, 1.0f, // 25
-            1.0f, -1.0f, 1.0f, // 26
-            1.0f, 1.0f, 1.0f, // 27
-            1.0f, 1.0f, -1.0f, // 28
-            -1.0f, 1.0f, -1.0f, // 29
-            1.0f, 1.0f, 1.0f, // 30
-            -1.0f, 1.0f, -1.0f, // 31
-            -1.0f, 1.0f, 1.0f, // 32
-            1.0f, 1.0f, 1.0f, // 33
-            -1.0f, 1.0f, 1.0f, // 34
-            1.0f, -1.0f, 1.0f  // 35
+            // Positions         // Texture Coords
+            // Front face
+            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,  // V0
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  // V1
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  // V2
+            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,  // V3
+
+            // Back face
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  // V4
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  // V5
+            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,  // V6
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  // V7
+
+            // Top face
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  // V8 (same as V4)
+            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,  // V9 (same as V0)
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  // V10 (same as V3)
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  // V11 (same as V7)
+
+            // Bottom face
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  // V12 (same as V5)
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  // V13 (same as V1)
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  // V14 (same as V2)
+            0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  // V15 (same as V6)
+
+            // Left face
+            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  // V16 (same as V4)
+            -0.5f, -0.5f, -0.5f,  1.0f, 0.0f,  // V17 (same as V5)
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  // V18 (same as V1)
+            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,  // V19 (same as V0)
+
+            // Right face
+            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,  // V20 (same as V3)
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  // V21 (same as V2)
+            0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  // V22 (same as V6)
+            0.5f,  0.5f, -0.5f,  0.0f, 1.0f   // V23 (same as V7)
         )
 
         val indices = intArrayOf(
-            0, 1, 2, // Triangle 1
-            3, 4, 5, // Triangle 2
-            6, 7, 8, // Triangle 3
-            9, 10, 11, // Triangle 4
-            12, 13, 14, // Triangle 5
-            15, 16, 17, // Triangle 6
-            18, 19, 20, // Triangle 7
-            21, 22, 23, // Triangle 8
-            24, 25, 26, // Triangle 9
-            27, 28, 29, // Triangle 10
-            30, 31, 32, // Triangle 11
-            33, 34, 35  // Triangle 12
+            // Front face
+            0, 1, 2, 2, 3, 0,
+            // Back face
+            4, 5, 6, 6, 7, 4,
+            // Top face
+            8, 9, 10, 10, 11, 8,
+            // Bottom face
+            12, 13, 14, 14, 15, 12,
+            // Left face
+            16, 17, 18, 18, 19, 16,
+            // Right face
+            20, 21, 22, 22, 23, 20
         )
+
 
         val rectLayout = renderer.choose<IBufferLayout>().create(
             mapOf(
-                DataType.Vec3 to "a_Position"
+                DataType.Vec3 to "a_Position",
+                DataType.Vec2 to "a_TexCoord",
             )
         )
 
@@ -149,18 +151,20 @@ class Sandbox : Application(
         rectVertexArray.addVertexBuffer(rectVertexBuffer)
         rectVertexArray.defineIndexBuffer(rectIndexBuffer)
 
-        resource("vertex", "shaders/vertex.glsl").cache()
-        resource("fragment", "shaders/fragment.glsl").cache()
+        val vertex = resource("shaders/vertex.glsl").cache()
+        val fragment = resource("shaders/fragment.glsl").cache()
 
         rectShader = renderer.choose<IShader>()
             .create(
                 listOf(
-                    OpenGLShader.ShaderModule(getResource("vertex").asText(), ShaderType.VERTEX),
-                    OpenGLShader.ShaderModule(getResource("fragment").asText(), ShaderType.FRAGMENT),
+                    OpenGLShader.ShaderModule(vertex.asText(), ShaderType.VERTEX),
+                    OpenGLShader.ShaderModule(fragment.asText(), ShaderType.FRAGMENT),
                 )
             )
 
         camera = PerspectiveCamera(90f, Vec3(4, 4, 4), Vec3(22.5f, -45, 0))
+
+        texture = renderer.choose<ITexture>().create("/home/meo209/IdeaProjects/Artifact/src/main/resources/tex.png")
 
         subscribe(FPSUpdateEvent::class) { event ->
             logger.info("FPS: ${event.fps}")
@@ -176,10 +180,6 @@ class Sandbox : Application(
             move { pos : Vec2 ->
                 hold(MOUSE_BUTTON_1) {
                     camera.rotate(pos.y, pos.x, 0f)
-
-                    if (camera.rotation.x > 45) {
-                        camera.rotate(-1f, 0f, 0f)
-                    }
                 }
             }
         }
@@ -197,6 +197,7 @@ class Sandbox : Application(
                 }
 
                 commit(rectVertexArray)
+                commit(texture)
 
                 push()
             }
