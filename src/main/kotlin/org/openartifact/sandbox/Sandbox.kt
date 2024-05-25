@@ -172,9 +172,7 @@ class Sandbox : Application(
         println(texResource.path)
         println(texResource.extract().path)
 
-        texture = renderer.choose<ITexture>().create(
-            texResource
-        )
+        texture = renderer.choose<ITexture>().create(texResource)
 
         subscribe(FPSUpdateEvent::class) { event ->
             logger.info("FPS: ${event.fps}")
@@ -206,8 +204,7 @@ class Sandbox : Application(
                     parameterMat4("u_MVP", mvp)
                 }
 
-                commit(rectVertexArray)
-                commit(texture)
+                commit(texture, rectVertexArray)
 
                 push()
             }
