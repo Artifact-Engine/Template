@@ -39,6 +39,7 @@ repositories {
 
 dependencies {
     implementation("io.github.kotlin-graphics:glm:0.9.9.1-12")
+    implementation("org.apache.commons:commons-collections4:4.5.0-M1")
 
     // LWJGL - OpenGL
     implementation(platform("org.lwjgl:lwjgl-bom:3.3.3"))

@@ -12,11 +12,14 @@ package org.openartifact.sandbox
 
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
+import org.apache.commons.collections4.MultiValuedMap
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap
 import org.openartifact.artifact.utils.calculateModelMatrix
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.ApplicationEntry
 import org.openartifact.artifact.core.event.events.FPSUpdateEvent
 import org.openartifact.artifact.core.event.subscribe
+import org.openartifact.artifact.extensions.multiValuedMapOf
 import org.openartifact.artifact.extensions.reset
 import org.openartifact.artifact.graphics.*
 import org.openartifact.artifact.graphics.cameras.PerspectiveCamera
@@ -51,10 +54,6 @@ class Sandbox : Application(
         KEY_Q to { movement.y += -1f }
     }
 
-    private val keyInputMap = createKeyInputMap {
-        KEY_LEFT_CONTROL with KEY_Q to { requestShutdown() }
-    }
-
     inner class Cube(val pos : Vec3) {
         var shader : IShader
 
@@ -64,63 +63,56 @@ class Sandbox : Application(
 
 
         val vertices = floatArrayOf(
-            // Positions
-            // Front face
-            -0.5f, 0.5f, 0.5f,
-            -0.5f, -0.5f, 0.5f,
-            0.5f, -0.5f, 0.5f,
-            0.5f, 0.5f, 0.5f,
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+            0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+            0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+            0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+            -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
 
-            // Back face
-            -0.5f, 0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f, 0.5f, -0.5f,
+            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
 
-            // Top face
-            -0.5f, 0.5f, -0.5f,
-            -0.5f, 0.5f, 0.5f,
-            0.5f, 0.5f, 0.5f,
-            0.5f, 0.5f, -0.5f,
+            -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
+            -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+            -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
+            -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
 
-            // Bottom face
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f, 0.5f,
-            0.5f, -0.5f, 0.5f,
-            0.5f, -0.5f, -0.5f,
+            0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+            0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+            0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+            0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
 
-            // Left face
-            -0.5f, 0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f, 0.5f,
-            -0.5f, 0.5f, 0.5f,
+            -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+            0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+            0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+            0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+            -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
 
-            // Right face
-            0.5f, 0.5f, 0.5f,
-            0.5f, -0.5f, 0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f, 0.5f, -0.5f,
+            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+            0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+            0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+            0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+            -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f
         )
 
-        val indices = intArrayOf(
-            // Front face
-            0, 1, 2, 2, 3, 0,
-            // Back face
-            4, 5, 6, 6, 7, 4,
-            // Top face
-            8, 9, 10, 10, 11, 8,
-            // Bottom face
-            12, 13, 14, 14, 15, 12,
-            // Left face
-            16, 17, 18, 18, 19, 16,
-            // Right face
-            20, 21, 22, 22, 23, 20
-        )
+        val indices = intArrayOf()
 
         init {
             val bufferLayout = renderer.choose<IBufferLayout>().create(
-                mapOf(
-                    DataType.Vec3 to "a_Position"
+                multiValuedMapOf(
+                    DataType.Vec3 to "a_Position",
+                    DataType.Vec3 to "a_Normal"
                 )
             )
 
@@ -147,7 +139,6 @@ class Sandbox : Application(
     }
 
     private lateinit var cube1 : Cube
-    private lateinit var cube2 : Cube
 
     override fun init() {
         logger.info("Sandbox init")
@@ -155,7 +146,6 @@ class Sandbox : Application(
         renderer = createRenderer()
 
         cube1 = Cube(Vec3(1, 0, 0))
-        cube2 = Cube(Vec3(-1, 0, 0))
 
         camera = PerspectiveCamera(90f, Vec3(4, 4, 4), Vec3(22.5f, -45, 0))
 
@@ -165,7 +155,6 @@ class Sandbox : Application(
     }
 
     override fun update(deltaTime : Double) {
-        keyInputMap.process()
         cameraInputMap.process()
             .run {
                 camera.move(
@@ -193,20 +182,6 @@ class Sandbox : Application(
                         parameterMat4("u_MVP", mvp)
                         parameterVec3("u_Color", Vec3(1, 1, 1))
                         parameterVec3("u_LightColor", Vec3(0.5, 0.5, 0.5))
-                    }
-
-                    commit(vertexArray)
-
-                    push()
-                }
-
-                cube2.apply {
-                    val mvp = camera.calculateMVPMatrix(calculateModelMatrix(pos, Vec3(0, 0, 0)))
-
-                    directCommit(shader) {
-                        parameterMat4("u_MVP", mvp)
-                        parameterVec3("u_Color", Vec3(1, 1, 1))
-                        parameterVec3("u_LightColor", Vec3(1, 0.25, 0.645))
                     }
 
                     commit(vertexArray)
