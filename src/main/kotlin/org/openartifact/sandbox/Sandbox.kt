@@ -118,8 +118,6 @@ class Sandbox : Application(
         )
 
         init {
-            vertexArray = renderer.choose<IVertexArray>().create()
-
             val bufferLayout = renderer.choose<IBufferLayout>().create(
                 mapOf(
                     DataType.Vec3 to "a_Position"
@@ -130,8 +128,10 @@ class Sandbox : Application(
 
             indexBuffer = renderer.choose<IIndexBuffer>().create(indices)
 
-            vertexArray.addVertexBuffer(vertexBuffer)
-            vertexArray.defineIndexBuffer(indexBuffer)
+            vertexArray = renderer.choose<IVertexArray>().create(
+                vertexBuffer,
+                indexBuffer
+            )
 
             val vertex = resource("shaders/vertex.glsl")
             val fragment = resource("shaders/fragment.glsl")
