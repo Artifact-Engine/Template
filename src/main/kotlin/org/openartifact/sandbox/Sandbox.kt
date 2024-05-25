@@ -180,8 +180,7 @@ class Sandbox : Application(
 
                     directCommit(shader) {
                         parameterMat4("u_MVP", mvp)
-                        parameterVec3("u_Color", Vec3(1, 1, 1))
-                        parameterVec3("u_LightColor", Vec3(0.5, 0.5, 0.5))
+                        parameterVec3("u_Color", Vec3(.7, .6, .6))
                     }
 
                     commit(vertexArray)
