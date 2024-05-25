@@ -164,7 +164,13 @@ class Sandbox : Application(
 
         camera = PerspectiveCamera(90f, Vec3(4, 4, 4), Vec3(22.5f, -45, 0))
 
-        texture = renderer.choose<ITexture>().create("/home/meo209/IdeaProjects/Artifact/src/main/resources/tex.png")
+        val texResource = resource("tex.png")
+
+        println(texResource.path)
+
+        texture = renderer.choose<ITexture>().create(
+            texResource
+        )
 
         subscribe(FPSUpdateEvent::class) { event ->
             logger.info("FPS: ${event.fps}")
