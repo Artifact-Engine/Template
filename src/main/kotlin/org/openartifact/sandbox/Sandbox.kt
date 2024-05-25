@@ -170,6 +170,7 @@ class Sandbox : Application(
         println(resource("tex.png").extract())
 
         println(texResource.path)
+        println(texResource.extract().path)
 
         texture = renderer.choose<ITexture>().create(
             texResource
