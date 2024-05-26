@@ -12,8 +12,6 @@ package org.openartifact.sandbox
 
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
-import org.apache.commons.collections4.MultiValuedMap
-import org.apache.commons.collections4.multimap.ArrayListValuedHashMap
 import org.openartifact.artifact.utils.calculateModelMatrix
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.ApplicationEntry
