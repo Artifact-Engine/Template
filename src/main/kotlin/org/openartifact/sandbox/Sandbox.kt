@@ -152,6 +152,9 @@ class Sandbox : Application(
         }
     }
 
+    private var lightPosY = 0.0f
+    private var lightPosDirection = 0.05f
+
     override fun update(deltaTime : Double) {
         cameraInputMap.process()
             .run {
@@ -171,15 +174,22 @@ class Sandbox : Application(
 
         movement.reset()
 
+        if (lightPosY > 5.0f || lightPosY < 0f) {
+            lightPosDirection = -lightPosDirection
+        }
+        lightPosY += lightPosDirection
+
+        println(lightPosY)
+
         renderer.frame {
             renderFlow {
                 cube1.apply {
-                    directCommit(shader) {
+                    commit(shader) {
                         parameterMat4("u_Projection", camera.calculateProjectionMatrix())
                         parameterMat4("u_View", camera.calculateViewMatrix())
                         parameterMat4("u_Model", calculateModelMatrix(pos, Vec3(0, 0, 0)))
                         parameterVec3("u_Color", Vec3(.6, .6, .6))
-                        parameterVec3("u_Light_Pos", Vec3(5, 5, 5))
+                        parameterVec3("u_Light_Pos", Vec3(2, lightPosY, 0))
                         parameterVec3("u_Light_Color", Vec3(.8, .8, .8))
                     }
 
