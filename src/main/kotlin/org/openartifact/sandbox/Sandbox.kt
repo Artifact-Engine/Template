@@ -176,11 +176,13 @@ class Sandbox : Application(
         renderer.frame {
             renderFlow {
                 cube1.apply {
-                    val mvp = camera.calculateMVPMatrix(calculateModelMatrix(pos, Vec3(10, 54, 0)))
-
                     directCommit(shader) {
-                        parameterMat4("u_MVP", mvp)
-                        parameterVec3("u_Color", Vec3(.7, .6, .6))
+                        parameterMat4("u_Projection", camera.calculateProjectionMatrix())
+                        parameterMat4("u_View", camera.calculateViewMatrix())
+                        parameterMat4("u_Model", calculateModelMatrix(pos, Vec3(0, 0, 0)))
+                        parameterVec3("u_Color", Vec3(.6, .6, .6))
+                        parameterVec3("u_Light_Pos", Vec3(5, 5, 5))
+                        parameterVec3("u_Light_Color", Vec3(.8, .8, .8))
                     }
 
                     commit(vertexArray)
