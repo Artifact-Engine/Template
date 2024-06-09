@@ -15,6 +15,7 @@ import glm_.vec3.Vec3
 import org.openartifact.artifact.utils.calculateModelMatrix
 import org.openartifact.artifact.core.Application
 import org.openartifact.artifact.core.event.events.FPSUpdateEvent
+import org.openartifact.artifact.core.event.events.ResizeEvent
 import org.openartifact.artifact.core.event.subscribe
 import org.openartifact.artifact.extensions.multiValuedMapOf
 import org.openartifact.artifact.extensions.reset
@@ -148,6 +149,10 @@ class Sandbox : Application(
         subscribe(FPSUpdateEvent::class) { event ->
             logger.info("FPS: ${event.fps}")
         }
+
+        subscribe(ResizeEvent::class) { event ->
+            logger.info("Resized to ${event.x} ${event.y}")
+        }
     }
 
     private var lightPosY = 0.0f
@@ -176,8 +181,6 @@ class Sandbox : Application(
             lightPosDirection = -lightPosDirection
         }
         lightPosY += lightPosDirection
-
-        println(lightPosY)
 
         renderer.frame {
             renderFlow {
