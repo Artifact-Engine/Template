@@ -67,7 +67,7 @@ Running the project requires creating a run configuration like this:
 
 ![runConfiguration in intellij](docs/runConfig.png "Run Configuration in IntelliJ idea")
 
-Make **sure** that "Use classpath of module" is set to ```<Project Name>.main```.
+Make **sure** that "Use classpath of module" is set to ```<Project Name>.main``` and the Configuration is of type 'Kotlin' **not** 'Application'.
 
 To get debug logs, add the following line to your VM options:
 ```
