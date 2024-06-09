@@ -14,7 +14,6 @@ import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import org.openartifact.artifact.utils.calculateModelMatrix
 import org.openartifact.artifact.core.Application
-import org.openartifact.artifact.core.ApplicationEntry
 import org.openartifact.artifact.core.event.events.FPSUpdateEvent
 import org.openartifact.artifact.core.event.subscribe
 import org.openartifact.artifact.extensions.multiValuedMapOf
@@ -30,7 +29,6 @@ import org.openartifact.artifact.input.MouseInput.hold
 import org.openartifact.artifact.input.MouseInput.move
 import org.openartifact.artifact.resource.resource
 
-@ApplicationEntry
 @Suppress("unused")
 class Sandbox : Application(
     RenderAPI.OpenGL,
