@@ -30,7 +30,7 @@ val lwjglNatives = Pair(
     }
 }
 
-group = "org.openartifact.test"
+group = "org.openartifact"
 version = "1.0-SNAPSHOT"
 
 repositories {

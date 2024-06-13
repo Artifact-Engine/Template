@@ -13,7 +13,7 @@ package org.openartifact.sandbox
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import org.openartifact.artifact.utils.calculateModelMatrix
-import org.openartifact.artifact.core.Application
+import org.openartifact.artifact.core.application.Application
 import org.openartifact.artifact.core.event.events.FPSUpdateEvent
 import org.openartifact.artifact.core.event.events.ResizeEvent
 import org.openartifact.artifact.core.event.subscribe
