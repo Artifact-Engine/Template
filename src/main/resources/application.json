@@ -1,5 +1,5 @@
 {
-  "name": "Sandbox",
+  "name": "Template Application",
   "version": "0.1.0",
-  "mainClass": "org.openartifact.sandbox.Sandbox"
+  "mainClass": "Template"
 }
